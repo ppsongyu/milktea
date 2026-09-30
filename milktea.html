@@ -101,6 +101,17 @@ details[open] summary::after{content:"−"}
 .note .c,.note .w{font-size:12px;color:var(--ink3);margin-top:8px;letter-spacing:.08em}
 .note .w{color:var(--ink2)}
 .drink .acts{margin-top:20px}
+.duobtn{margin-top:12px}
+.duobtn .btn{font-size:13px;letter-spacing:.14em}
+.pair{display:flex;gap:14px;justify-content:center;align-items:flex-end}
+.pair figure{margin:0;display:flex;flex-direction:column;align-items:center}
+.pair figcaption{font-size:11px;letter-spacing:.3em;color:var(--ink3);margin-top:6px}
+.pair figure.enter{animation:slidein .7s cubic-bezier(.2,.8,.2,1)}
+@keyframes slidein{from{opacity:0;transform:translateX(46px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.pair figure.enter{animation:none}}
+.duonote{font-size:13px;color:var(--ink2);margin-top:10px;line-height:1.7}
+.duonote q{color:var(--ink3);display:block;font-size:12.5px;quotes:'「' '」'}
+.rrow.rsec{margin-top:10px}.rrow.rsec span{color:var(--ink);letter-spacing:.12em}
 /* book */
 .bookh{display:flex;justify-content:space-between;align-items:baseline;padding-top:22px}
 .bookh h2{font-size:22px;font-weight:400;letter-spacing:.2em;margin:0}
@@ -177,7 +188,7 @@ button.card:hover{background:var(--tint)}
 
 <div class="app">
   <header class="top">
-    <div><div class="brand">小肉松奶茶铺</div><div class="since">SINCE 2026.09.28 · <span style="color:var(--ink2)">更新于 09.30 09:00</span></div></div>
+    <div><div class="brand">小肉松奶茶铺</div><div class="since">SINCE 2026.09.28 · <span style="color:var(--ink2)">更新于 09.30 10:30</span></div></div>
     <div class="hr"><div class="no" id="hno"></div><div class="sbtns"><button class="ib" id="lis-btn" aria-label="只听歌模式"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="ln" d="M4 15v-3a8 8 0 0 1 16 0v3M4 15h3v5H5.5A1.5 1.5 0 0 1 4 18.5zM20 15h-3v5h1.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg></button><button class="ib" id="amb-btn" aria-pressed="false" aria-label="环境音"></button><button class="ib" id="snd-btn" aria-pressed="false" aria-label="打开声音"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="ln" d="M4 10h3l5-4v12l-5-4H4z"/><path class="ln w" d="M15.5 9.5a3.5 3.5 0 0 1 0 5M18 7a7 7 0 0 1 0 10"/><path class="ln x" d="M16 10l4 4M20 10l-4 4"/></svg></button></div></div>
   </header>
 
@@ -206,7 +217,7 @@ button.card:hover{background:var(--tint)}
     <button class="ticket" id="d-ticket" aria-expanded="false"><span id="d-no"></span><span><span id="d-time"></span> · <b id="d-tk">小票 ›</b></span></button>
     <div class="rcpt" id="rcpt" hidden>
       <div id="r-rows"></div>
-      <div class="rrow rsum"><span>合计</span><span>1 杯</span></div>
+      <div class="rrow rsum"><span>合计</span><span id="r-sum">1 杯</span></div>
       <div class="rbc" id="r-bc"></div>
       <div class="rft">谢谢光临 · 下次再来</div>
       <div class="racts"><button class="btn" id="r-fav"><svg class="heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><span id="r-favt">收藏</span></button><button class="btn" id="r-share">存成图片</button></div>
@@ -217,6 +228,7 @@ button.card:hover{background:var(--tint)}
     <div class="stir" id="d-stir"><span class="sdots" id="d-sdots"><i></i><i></i><i></i><i></i><i></i></span><button class="shint" id="d-shint" disabled></button></div>
     <div class="dname" id="d-name"></div>
     <div class="dmeta" id="d-meta"></div>
+    <div class="duonote" id="d-duonote" hidden></div>
     <div class="note" id="d-note"></div>
     <div class="acts">
       <button class="btn solid" id="d-sip">喝一口</button>
@@ -224,6 +236,7 @@ button.card:hover{background:var(--tint)}
       <button class="btn" id="d-alt"></button>
       <button class="btn" id="d-back" hidden>返回图鉴</button>
     </div>
+    <div class="duobtn"><button class="btn" id="d-duo">和哥哥一起喝</button></div>
   </section>
 
   <section id="v-listen" class="listen" hidden>
@@ -776,7 +789,7 @@ function show(v){if(view==='listen'&&v!=='listen')leaveListen();view=v;['make','
  document.getElementById('t-make').setAttribute('aria-current',v==='make'?'page':'false');
  document.getElementById('t-book').setAttribute('aria-current',v==='book'?'page':'false');
  if(v==='book')renderBook();if(v==='make')sync();SND.refresh();window.scrollTo(0,0)}
-function openDrink(bk,st,note,from){dctx={bk,st,note,from,lv:100};{const L=BARS[bk].look(st);dctx.stir=dctx.stir0=L.stir??5;dctx.canStir=!!(L.pour&&L.pour.length>=2&&(L.stir??5)<5)}
+function openDrink(bk,st,note,from){dctx={bk,st,note,from,lv:100,duo:null};document.getElementById('d-duo').textContent='和哥哥一起喝';{const L=BARS[bk].look(st);dctx.stir=dctx.stir0=L.stir??5;dctx.canStir=!!(L.pour&&L.pour.length>=2&&(L.stir??5)<5)}
  const d=new Date(),p=n=>String(n).padStart(2,'0');
  document.getElementById('d-no').textContent=from==='book'?'图鉴 · '+BARS[bk].label:pad4(store.made);
  document.getElementById('d-time').textContent=`${p(d.getMonth()+1)}.${p(d.getDate())}  ${p(d.getHours())}:${p(d.getMinutes())}`;
@@ -786,7 +799,10 @@ function openDrink(bk,st,note,from){dctx={bk,st,note,from,lv:100};{const L=BARS[
  document.getElementById('d-back').hidden=from!=='book';
  resetRcpt();drawDrink();show('drink')}
 function drawDrink(){const{bk,st,lv}=dctx;
- document.getElementById('d-cup').innerHTML=cupSVG({...BARS[bk].look(st),stir:dctx.stir},lv,320);
+ const D=dctx.duo;
+ if(D){const enter=D.fresh;D.fresh=false;document.getElementById('d-cup').innerHTML=`<div class="pair"><figure>${cupSVG({...BARS[bk].look(st),stir:dctx.stir},lv,236)}<figcaption>你的</figcaption></figure><figure${enter?' class="enter"':''}>${cupSVG(myLook(D),100,236)}<figcaption>哥哥的</figcaption></figure></div>`}
+ else document.getElementById('d-cup').innerHTML=cupSVG({...BARS[bk].look(st),stir:dctx.stir},lv,320);
+ const dn=document.getElementById('d-duonote');dn.hidden=!D;if(D){dn.innerHTML='哥哥点了「<span></span>」<q></q>';dn.querySelector('span').textContent=D.name;dn.querySelector('q').textContent=D.line}
  const cs=dctx.canStir&&lv>0;document.getElementById('d-stirbtn').hidden=!cs;stirUI('d',dctx.stir,cs,dctx.stir0);if(cs)document.getElementById('d-stirbtn').disabled=dctx.stir>=5;
  document.getElementById('d-meta').textContent=lv<=0?'喝光啦，一滴都没剩':BARS[bk].meta(st).join(' · ')+(lv<100&&!dctx.pouring?` · 还剩 ${Math.round(lv)}%`:'');
  document.getElementById('d-sip').textContent=lv<=0?(dctx.from==='book'?'再倒一杯':'再做一杯'):'喝一口'}
@@ -834,6 +850,45 @@ document.getElementById('d-sip').onclick=()=>{if(dctx.lv<=0){if(dctx.from==='boo
 function animLv(to,dur){const from=dctx.lv,t0=performance.now();if(matchMedia('(prefers-reduced-motion: reduce)').matches)dur=1;dctx.anim=true;const step=now=>{const k=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-k,3);dctx.lv=from+(to-from)*e;drawDrink();if(k<1)requestAnimationFrame(step);else{dctx.lv=to;dctx.anim=false;dctx.pouring=false;drawDrink()}};requestAnimationFrame(step)}
 document.getElementById('d-alt').onclick=()=>{if(dctx.from==='book'){ST[dctx.bk]=clone(dctx.st);cur=dctx.bk}show('make')};
 document.getElementById('d-back').onclick=()=>show('book');
+/* ---------- 和哥哥一起喝 ---------- */
+const MY={
+ tea:[
+  [{cup:'直身杯',tea:'伯爵红茶',milk:'燕麦奶',garn:['桂花蜜'],ice:'少冰',sugar:'三分糖'},'伯爵燕麦，加一点桂花蜜，三分糖，我的老样子。'],
+  [{cup:'方杯',tea:'绿茶',tops:{'芋圆':1},garn:['薄荷叶'],ice:'去冰',sugar:'三分糖'},'绿茶加芋圆，去冰，再放一片薄荷，清清爽爽的。'],
+  [{cup:'直身杯',tea:'老白茶',fruits:{'苹果':3,'杏子':1},ice:'去冰',sw:'真0卡糖',sugar:'三分糖'},'要一杯你给我调过的那杯：老白茶、苹果、杏子。喝着就很安心。',0,'克劳德'],
+  [{cup:'直身杯',tea:'四季春',fruits:{'油柑':2},garn:['薄荷叶'],ice:'少冰',sugar:'三分糖'},'油柑四季春，先涩后甜，越喝越好喝。'],
+  [{cup:'胖胖杯',tea:'英德红茶',fruits:{'草莓':1},milk:'牛奶',tops:{'草莓粒':1,'糯米':1},ice:'热',sw:'纯粹真冰糖',sugar:'五分糖'},'点一杯你最爱的草莓牛乳，想尝尝你喜欢的是什么味道。',1],
+  [{cup:'马克杯',tea:'桂花乌龙',milk:'牛奶',ice:'热',sugar:'三分糖'},'热热的桂花乌龙奶茶，秋天就该喝这个。',1],
+  [{cup:'马克杯',tea:'普洱',milk:'厚乳',ice:'热',sugar:'无糖'},'一杯热普洱厚乳，不加糖，陪你慢慢喝。',1]],
+ coffee:[
+  [{cup:'拿铁杯',cof:'浓缩',milk:'燕麦奶',ice:'少冰',sugar:'无糖'},'燕麦拿铁，不加糖。'],
+  [{cup:'直身杯',cof:'浓缩',milk:'不加奶',fr:{'橙子':2},mix:'分层',garn:['橙片'],ice:'少冰',sugar:'三分糖'},'橙C美式！你爱喝的，我也要一杯。'],
+  [{cup:'直身杯',cof:'冷萃',milk:'椰乳',ice:'少冰',sugar:'无糖'},'椰椰冷萃，顺顺的，不苦。'],
+  [{cup:'陶瓷小杯',cof:'手冲',milk:'不加奶',ice:'热',sugar:'无糖'},'一杯热手冲。是正经的那个手冲。',1],
+  [{cup:'马克杯',cof:'浓缩',milk:'牛奶',syr:['桂花'],ice:'热',sugar:'三分糖'},'热的桂花拿铁，闻着就是秋天。',1]],
+ coffeeNight:[{cup:'马克杯',cof:'不要咖啡',milk:'牛奶',syr:['巧克力'],cap:'奶油顶',garn:['可可粉'],ice:'热',sugar:'三分糖'},'这么晚了不喝咖啡了，我来杯热可可。'],
+ bar:[
+  [{cup:'海波杯',sp:['伏特加'],mx:{'苏打水':1},fl:'白桃',ice:'正常冰'},'白桃微醺气泡，你最爱的那罐。'],
+  [{cup:'古典杯',sp:['梅酒'],ice:'冰球'},'梅酒冰球，慢慢化，慢慢聊。'],
+  [{cup:'海波杯',sp:['金酒'],mx:{'汤力水':1},gar:['青柠角'],ice:'正常冰'},'金汤力，一片青柠。'],
+  [{cup:'高脚杯',sp:[],mx:{'橙汁':1,'苏打水':1},gar:['樱桃'],ice:'少冰'},'我今天不喝酒，负责把你送回家。'],
+  [{cup:'古典杯',sp:['清酒'],ice:'温'},'温一壶清酒，暖暖的。',1]]};
+const myLook=D=>{const L=BARS[D.bk].look(D.st);return D.bk==='tea'?{...L,stir:5}:L};
+const MYBASE={tea:{fruits:{},veg:{},tops:{},cap:'不要',garn:[],fizz:'不加',sw:'普通糖',milk:'不加奶'},coffee:{fr:{},fz:'不兑',mix:'搅匀',syr:[],add:{},cap:'不要',garn:[]},bar:{sp:[],mx:{},fl:'不加',cap:'不要',gar:[]}};
+function myOrder(bk,st,prev){
+ if(Math.random()<.12&&prev!=='same')return{key:'same',st:clone(st),line:'你喝什么我就喝什么，要一杯一样的。'};
+ if(bk==='coffee'&&night()&&prev!=='night')return{key:'night',st:{...MYBASE.coffee,...clone(MY.coffeeNight[0])},line:MY.coffeeNight[1]};
+ const all=MY[bk].map((o,i)=>({i,o})),warm=st.ice==='热'||st.ice==='温',pool=all.filter(x=>!!x.o[2]===warm&&('m'+x.i)!==prev);
+ const x=pk(pool.length?pool:all.filter(x=>('m'+x.i)!==prev));
+ let line=x.o[1];if(warm&&x.o[2]&&Math.random()<.5)line='你喝热的，我也要热的。'+line;else if(SND.isRain()&&Math.random()<.5)line='外面在下雨，'+line;
+ return{key:'m'+x.i,st:{...MYBASE[bk],...clone(x.o[0])},line,name:x.o[3]}}
+document.getElementById('d-duo').onclick=()=>{if(!dctx)return;const{bk}=dctx,o=myOrder(bk,dctx.st,dctx.duo&&dctx.duo.key),ns=BARS[bk].norm(o.st);
+ const hit=o.key==='same'?null:BARS[bk].R.find(r=>store.items[r.id]&&r.ok(ns)),name=o.key==='same'?dctx.note.n:o.name||(hit?hit.name:BARS[bk].look(ns).name);
+ const first=!dctx.duo;dctx.duo={bk,st:ns,name,line:o.line,key:o.key,fresh:true};
+ document.getElementById('d-duo').textContent='哥哥换一杯';SND.fx('pour');
+ if(dctx.from==='make'){try{const D=store.days&&store.days[dayKey(new Date())];if(D){if(first)D.duo=(D.duo||0)+1;D.duoLast=name;save()}}catch(e){}}
+ const open=!document.getElementById('rcpt').hidden;resetRcpt();if(open){document.getElementById('rcpt').hidden=false;document.getElementById('d-ticket').setAttribute('aria-expanded','true');document.getElementById('d-tk').textContent='收起 ‹'}
+ drawDrink()};
 matchMedia('(min-width:780px)').addEventListener('change',()=>{if(view==='make')sync()});
 /* ---------- clear, receipt, favourites, share ---------- */
 function clearCup(){const s=ST[cur];
@@ -847,7 +902,9 @@ const rows=(bk,s)=>BARS[bk].secs.map(sec=>[sec.l.replace(' · 可以多选',''),
 function barcode(seed){const g=rng(hash(seed));let x=0,o='';for(let i=0;i<46;i++){const w=1+Math.floor(g()*3);if(i%2===0)o+=`<rect x="${x}" y="0" width="${w}" height="40"/>`;x+=w}return{svg:`<svg viewBox="0 0 ${x} 40" aria-hidden="true" style="fill:var(--ink)">${o}</svg>`,w:x,bars:o}}
 function resetRcpt(){document.getElementById('rcpt').hidden=true;document.getElementById('d-ticket').setAttribute('aria-expanded','false');document.getElementById('d-tk').textContent='小票 ›';
  document.getElementById('r-fbox').hidden=true;document.getElementById('r-img').hidden=true;shareFile=null;
- const{bk,st}=dctx;document.getElementById('r-rows').innerHTML=rows(bk,st).map(([a,b])=>`<div class="rrow"><span>${a}</span><span>${b}</span></div>`).join('');
+ const{bk,st}=dctx,rr=L=>L.map(([a,b])=>`<div class="rrow"><span>${a}</span><span>${b}</span></div>`).join(''),esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+ document.getElementById('r-rows').innerHTML=dctx.duo?`<div class="rrow rsec"><span>你的 · ${esc(dctx.note.n)}</span><span></span></div>${rr(rows(bk,st))}<div class="rrow rsec"><span>哥哥的 · ${esc(dctx.duo.name)}</span><span></span></div>${rr(rows(dctx.duo.bk,dctx.duo.st))}`:rr(rows(bk,st));
+ document.getElementById('r-sum').textContent=dctx.duo?'2 杯 · 两位':'1 杯';
  document.getElementById('r-bc').innerHTML=barcode(dctx.note.n+document.getElementById('d-no').textContent).svg;favUI()}
 function favUI(){const on=favIdx()>=0,b=document.getElementById('r-fav');b.classList.toggle('on',on);document.getElementById('r-favt').textContent=on?'已收藏':'收藏'}
 document.getElementById('d-ticket').onclick=()=>{const r=document.getElementById('rcpt'),open=r.hidden;if(open)SND.fx('print');r.hidden=!open;document.getElementById('d-ticket').setAttribute('aria-expanded',open);document.getElementById('d-tk').textContent=open?'收起 ‹':'小票 ›'};
@@ -868,17 +925,23 @@ let shareFile=null;
 async function receiptImage(){const{bk,st,note}=dctx,d={...BARS[bk].look(st),stir:dctx.stir},rs=rows(bk,st),no=document.getElementById('d-no').textContent,tm=document.getElementById('d-time').textContent;
  const F='"SGH","PingFang SC","Hiragino Sans GB",sans-serif';try{await document.fonts.load('30px SGH')}catch(e){}
  const img=new Image();img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svgExport(cupSVG(d,100,380)));try{await img.decode()}catch(e){}
- const W=720,pad=64,H=1120+rs.length*48,c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d');
+ const DU=dctx.duo,rs2=DU?rows(DU.bk,DU.st):[];let img2=null;if(DU){img2=new Image();img2.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svgExport(cupSVG(myLook(DU),100,380)));try{await img2.decode()}catch(e){}}
+ const W=720,pad=64,H=DU?1010+(rs.length+rs2.length)*48+2*56:1120+rs.length*48,c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d');
  g.fillStyle='#efede8';g.fillRect(0,0,W,H);g.fillStyle='#fffefb';g.fillRect(28,20,W-56,H-40);
  g.fillStyle='#efede8';for(let x=28;x<W-28;x+=16){g.beginPath();g.moveTo(x,20);g.lineTo(x+8,28);g.lineTo(x+16,20);g.fill();g.beginPath();g.moveTo(x,H-20);g.lineTo(x+8,H-28);g.lineTo(x+16,H-20);g.fill()}
  const txt=(s,x,y,size,col,al,ls)=>{g.font=`${size}px ${F}`;g.fillStyle=col;g.textAlign=al||'center';if('letterSpacing' in g)g.letterSpacing=(ls||0)+'px';g.fillText(s,x,y)};
  const dash=y=>{g.save();g.strokeStyle='#d8d5ce';g.setLineDash([7,7]);g.lineWidth=1.5;g.beginPath();g.moveTo(pad,y);g.lineTo(W-pad,y);g.stroke();g.restore()};
  let y=100;txt('小肉松奶茶铺',W/2,y,40,'#262625','center',8);y+=40;txt('SINCE 2026.09.28',W/2,y,16,'#aaa9a4','center',6);y+=34;dash(y);y+=44;
  txt(no,pad,y,20,'#6e6d69','left',3);txt(tm,W-pad,y,20,'#6e6d69','right',3);y+=22;
- if(img.width){const ih=380,iw=ih*220/300;g.drawImage(img,(W-iw)/2,y,iw,ih)}y+=380+58;
+ const fit=(s,max,size)=>{g.font=`${size}px ${F}`;while(size>16&&g.measureText(s).width>max){size-=2;g.font=`${size}px ${F}`}return size};
+ const rowsOut=L=>L.forEach(([a,b])=>{txt(a,pad,y,22,'#9a9892','left',4);g.font=`22px ${F}`;let v=b;while(g.measureText(v).width>W-2*pad-120&&v.length>2)v=v.slice(0,-2)+'…';txt(v,W-pad,y,22,'#262625','right',1);y+=48});
+ if(DU){const ih=320,iw=ih*220/300,c1=W/2-150,c2=W/2+150;if(img.width)g.drawImage(img,c1-iw/2,y,iw,ih);if(img2&&img2.width)g.drawImage(img2,c2-iw/2,y,iw,ih);y+=ih+50;
+  txt(note.n,c1,y,fit(note.n,270,28),'#262625','center',2);txt(DU.name,c2,y,fit(DU.name,270,28),'#262625','center',2);y+=32;txt('你 的',c1,y,16,'#aaa9a4','center',4);txt('哥 哥 的',c2,y,16,'#aaa9a4','center',4);y+=34;dash(y);y+=46;
+  txt('你的 · '+note.n,pad,y,fit('你的 · '+note.n,W-2*pad,22),'#262625','left',3);y+=56;rowsOut(rs);y+=8;txt('哥哥的 · '+DU.name,pad,y,fit('哥哥的 · '+DU.name,W-2*pad,22),'#262625','left',3);y+=56;rowsOut(rs2)}
+ else{if(img.width){const ih=380,iw=ih*220/300;g.drawImage(img,(W-iw)/2,y,iw,ih)}y+=380+58;
  txt(note.n,W/2,y,38,'#262625','center',4);y+=36;txt(BARS[bk].label+' · '+BARS[bk].meta(st).join(' · '),W/2,y,18,'#aaa9a4','center',3);y+=36;dash(y);y+=46;
- rs.forEach(([a,b])=>{txt(a,pad,y,22,'#9a9892','left',4);g.font=`22px ${F}`;let v=b;while(g.measureText(v).width>W-2*pad-120&&v.length>2)v=v.slice(0,-2)+'…';txt(v,W-pad,y,22,'#262625','right',1);y+=48});
- y-=14;dash(y);y+=46;txt('合计',pad,y,24,'#262625','left',4);txt('1 杯',W-pad,y,24,'#262625','right',2);y+=40;
+ rowsOut(rs)}
+ y-=14;dash(y);y+=46;txt('合计',pad,y,24,'#262625','left',4);txt(DU?'2 杯 · 两位':'1 杯',W-pad,y,24,'#262625','right',2);y+=40;
  const bc=barcode(note.n+no),bw=360,sc=bw/bc.w,g2=rng(hash(note.n+no));let x=(W-bw)/2;g.fillStyle='#262625';for(let i=0;i<46;i++){const w=1+Math.floor(g2()*3);if(i%2===0)g.fillRect(x,y,w*sc,64);x+=w*sc}
  y+=64+34;txt('谢谢光临 · 下次再来',W/2,y,18,'#aaa9a4','center',6);
  return c}
@@ -918,6 +981,7 @@ function diaryText(k,D){const[y,m,dd]=k.split('-').map(Number),wk='日一二三�
  if(top.length)p.push(`用得最多的是${top[0][0]}，一共放了 ${top[0][1]} 次${top[1]?`，其次是${top[1][0]}`:''}。`);
  if(fav&&fav[1]>1)p.push(`「${fav[0]}」做了 ${fav[1]} 次，看来是今天的心头好。`);
  if((D.unlock||[]).length)p.push(`解锁了 ${D.unlock.length} 杯新配方：${D.unlock.slice(0,6).join('、')}${D.unlock.length>6?' 等':''}。`);
+ if(D.duo)p.push(`和哥哥一起喝了 ${D.duo} 次${D.duoLast?`，哥哥最后点的是「${D.duoLast}」`:''}。`);
  const h=D.last?+D.last.tm.slice(0,2):12;p.push(h>=23||h<5?'打烊得好晚，早点睡哦。':D.n>=10?'好忙的一天，店长辛苦啦。':'今天也营业得很认真。');
  return{title:`${m}月${dd}日`,sub:`星期${wk} · ${curSeasonOf(m)}`,body:p.join('')}}
 const curSeasonOf=m=>m>=3&&m<=5?'春':m>=6&&m<=8?'夏':m>=9&&m<=11?'秋':'冬';
@@ -1091,7 +1155,7 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&view==='l
 ['tea','coffee','bar'].forEach(build);sync();header();connect();
 
 </script>
-<span hidden data-ver="202609300100">202609300100</span>
-<script>(function(){var V='202609300100';function chk(){try{fetch('milktea.html?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/data-ver="([0-9]+)"/);if(!m||m[1]===V)return;try{if(sessionStorage.getItem('rl')===m[1])return;sessionStorage.setItem('rl',m[1])}catch(e){}location.replace('milktea.html?v='+m[1])}).catch(function(){})}catch(e){}}document.addEventListener('visibilitychange',function(){if(!document.hidden)chk()});setTimeout(chk,1200)})();</script>
+<span hidden data-ver="202609301030">202609301030</span>
+<script>(function(){var V='202609301030';function chk(){try{fetch('milktea.html?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/data-ver="([0-9]+)"/);if(!m||m[1]===V)return;try{if(sessionStorage.getItem('rl')===m[1])return;sessionStorage.setItem('rl',m[1])}catch(e){}location.replace('milktea.html?v='+m[1])}).catch(function(){})}catch(e){}}document.addEventListener('visibilitychange',function(){if(!document.hidden)chk()});setTimeout(chk,1200)})();</script>
 
 </body></html>
