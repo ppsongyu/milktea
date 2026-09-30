@@ -177,7 +177,7 @@ button.card:hover{background:var(--tint)}
 
 <div class="app">
   <header class="top">
-    <div><div class="brand">小肉松奶茶铺</div><div class="since">SINCE 2026.09.28 · <span style="color:var(--ink2)">更新于 09.29 21:47</span></div></div>
+    <div><div class="brand">小肉松奶茶铺</div><div class="since">SINCE 2026.09.28 · <span style="color:var(--ink2)">更新于 09.30 08:40</span></div></div>
     <div class="hr"><div class="no" id="hno"></div><div class="sbtns"><button class="ib" id="lis-btn" aria-label="只听歌模式"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="ln" d="M4 15v-3a8 8 0 0 1 16 0v3M4 15h3v5H5.5A1.5 1.5 0 0 1 4 18.5zM20 15h-3v5h1.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg></button><button class="ib" id="amb-btn" aria-pressed="false" aria-label="环境音"></button><button class="ib" id="snd-btn" aria-pressed="false" aria-label="打开声音"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="ln" d="M4 10h3l5-4v12l-5-4H4z"/><path class="ln w" d="M15.5 9.5a3.5 3.5 0 0 1 0 5M18 7a7 7 0 0 1 0 10"/><path class="ln x" d="M16 10l4 4M20 10l-4 4"/></svg></button></div></div>
   </header>
 
@@ -422,13 +422,17 @@ const TEA_CUPS=['直身杯','胖胖杯','牛奶瓶','马克杯','高脚杯','方
 /* ---------- coffee ---------- */
 const COF={'浓缩':'#3b2217','双份浓缩':'#2a150d','冷萃':'#4a2a18','手冲':'#7a4322','不要咖啡':null};
 const CMILK={'不加奶':null,'牛奶':'#f8f3ea','燕麦奶':'#ecdcc0','椰乳':'#f3e9d6','冰博克':'#f1e2c4','厚乳':'#f3e3c3'};
-const SYR={'香草':'#f3e2b0','焦糖':'#c98a3a','榛果':'#a8743f','桂花':'#e8a33a','黑糖':'#5b2c16'};
+const SYR={'香草':'#f3e2b0','焦糖':'#c98a3a','榛果':'#a8743f','桂花':'#e8a33a','黑糖':'#5b2c16','巧克力':'#4a2618'};
+const CFR=['橙子','西柚','柠檬','青提'];
+const CFZ={'不兑':null,'苏打水':'#ebf3f6','汤力水':'#e6eff3','椰青水':'#f4f1e6'};
 const CADD={'椰子肉':'#fbf8f0','珍珠':'#2a1a12','燕麦':'#d9bf8c','奥利奥碎':'#2b2522'};
 const CCAP={'不要':null,'奶泡':'#fbf8f2','奶油顶':'#fffdf8','雪顶':'#fff6e6'};
-const CGARN={'可可粉':'#6b4028','肉桂粉':'#8a5230','焦糖淋酱':'#b06a24','桂花蜜':'#e8a33a'};
-const DEF_C={cup:'拿铁杯',cof:'浓缩',milk:'牛奶',mix:'搅匀',syr:[],add:{},cap:'不要',garn:[],ice:'少冰',sugar:'三分糖'};
+const CGARN={'可可粉':'#6b4028','肉桂粉':'#8a5230','焦糖淋酱':'#b06a24','桂花蜜':'#e8a33a','海盐':'#f4f4f1','薄荷叶':'#6fae6a','橙片':'#f7a53c','柠檬片':'#f4dc4a'};
+const CRIM=['橙片','柠檬片'];
+const DEF_C={cup:'拿铁杯',cof:'浓缩',milk:'牛奶',fr:{},fz:'不兑',mix:'搅匀',syr:[],add:{},cap:'不要',garn:[],ice:'少冰',sugar:'三分糖'};
 const E=s=>s.cof==='浓缩'||s.cof==='双份浓缩',CM=s=>s.milk!=='不加奶',SY=(s,x)=>s.syr.includes(x),AD=(s,x,n=1)=>(s.add[x]||0)>=n,cold=s=>s.ice!=='热';
-const cbare=s=>!s.syr.length&&!Object.values(s.add).some(v=>v>0)&&s.cap==='不要'&&!s.garn.length;
+const CF=(s,x,n=1)=>((s.fr||{})[x]||0)>=n,nCF=s=>Object.values(s.fr||{}).filter(v=>v>0).length,FZ=(s,x)=>(s.fz||'不兑')===x;
+const cbare=s=>!s.syr.length&&!Object.values(s.add).some(v=>v>0)&&s.cap==='不要'&&!s.garn.length&&!nCF(s)&&FZ(s,'不兑');
 const R_COF=[
  ['c_insomnia','失眠特调','这么晚了还喝双份浓缩？今晚就别熬夜啦，喝完这杯早点睡。',null,s=>s.cof==='双份浓缩'&&night()],
  ['c_cocofull','满杯生椰','椰乳、浓缩，再塞满椰子肉，装在胖胖杯里。给最爱生椰拿铁的小肉松。',null,s=>E(s)&&s.milk==='椰乳'&&AD(s,'椰子肉',3)&&s.cup==='胖胖杯'],
@@ -455,14 +459,32 @@ const R_COF=[
  ['c_frappe','咖啡冰沙','浓缩和奶打成冰沙，上面一朵奶油。','咖啡加奶打成冰沙，戴白云帽',s=>E(s)&&CM(s)&&s.ice==='冰沙'&&s.cap==='奶油顶'],
  ['c_coldbrew','冷萃','慢慢泡了一整夜的咖啡，顺滑不苦。','冷萃，什么都不加',s=>s.cof==='冷萃'&&!CM(s)&&cbare(s)],
  ['c_cococold','椰椰冷萃','冷萃配椰乳，比生椰拿铁更清爽。','冷萃配椰子做的奶',s=>s.cof==='冷萃'&&s.milk==='椰乳'],
+ ['c_commute','通勤日出','橙子和西柚沉在杯底，双份浓缩慢慢压上来，像早高峰地铁窗外刚升起来的太阳。贴着门站也要喝完，今天也辛苦啦。',null,s=>s.cof==='双份浓缩'&&!CM(s)&&CF(s,'橙子')&&CF(s,'西柚')&&s.mix==='分层'],
+ ['c_orangefull','满杯橙C美式','橙子放到满满三份，浓缩浮在最上面，给最爱橙C美式的小肉松。',null,s=>E(s)&&!CM(s)&&CF(s,'橙子',3)&&s.mix==='分层'],
+ ['c_orangec','橙C美式','鲜橙汁垫在杯底，浓缩浮在上面，橙色和咖啡色分成两层。先酸甜，后苦香。','浓缩加橙子，不加奶，分成两层',s=>E(s)&&!CM(s)&&CF(s,'橙子')&&s.mix==='分层'&&cold(s)],
+ ['c_grapefruit','西柚美式','西柚微微发苦，和咖啡的苦刚好接得上，粉粉的很好看。','浓缩加西柚，不加奶',s=>E(s)&&!CM(s)&&CF(s,'西柚')&&!CF(s,'橙子')],
+ ['c_lemon','冰柠咖啡','柠檬片泡在冰美式里，酸酸的，喝完嘴巴清清爽爽。','浓缩加柠檬，不加奶，要冰',s=>E(s)&&!CM(s)&&CF(s,'柠檬')&&cold(s)],
+ ['c_grape','青提美式','青提的清甜把咖啡的苦包起来了，像夏天的风。','浓缩加青提，不加奶',s=>E(s)&&!CM(s)&&CF(s,'青提')],
+ ['c_cocowater','椰青美式','椰青水兑浓缩，清清甜甜，比美式温柔一点。','浓缩兑椰青水，不加奶',s=>E(s)&&!CM(s)&&FZ(s,'椰青水')],
+ ['c_tonic','咖啡汤力','汤力水冒着气泡，浓缩慢慢沉下去，微苦又带一点点甜。','浓缩兑汤力水',s=>E(s)&&!CM(s)&&FZ(s,'汤力水')],
+ ['c_orangetonic','橙子汤力咖啡','橙子、汤力、浓缩三层，气泡一路往上冒，最好看的一杯。','橙子、汤力水、浓缩，分成几层',s=>E(s)&&!CM(s)&&CF(s,'橙子')&&FZ(s,'汤力水')&&s.mix==='分层'],
+ ['c_sparkle','气泡美式','苏打水兑浓缩，喝起来沙沙的，下午犯困来一杯。','浓缩兑苏打水，不加奶',s=>E(s)&&!CM(s)&&FZ(s,'苏打水')],
+ ['c_orangemocha','橙香摩卡','巧克力配橙子是老搭档，摩卡里藏了一点点橙子的香。','拿铁加巧克力，再加橙子',s=>E(s)&&CM(s)&&SY(s,'巧克力')&&(CF(s,'橙子')||G(s,'橙片'))],
+ ['c_choclatte','巧克力拿铁','巧克力酱垫底，浓缩和牛奶倒进去，甜甜的很好入口。','拿铁加巧克力',s=>E(s)&&CM(s)&&SY(s,'巧克力')],
+ ['c_cocoa','热可可','不要咖啡，热牛奶里化开巧克力，冬天的晚上捧在手里。','不要咖啡，热的奶加巧克力',s=>s.cof==='不要咖啡'&&CM(s)&&SY(s,'巧克力')&&s.ice==='热'],
+ ['c_saltcaramel','海盐焦糖拿铁','焦糖甜甜的，顶上撒一点海盐，咸咸甜甜停不下来。','拿铁加焦糖，撒海盐',s=>E(s)&&CM(s)&&SY(s,'焦糖')&&G(s,'海盐')],
+ ['c_mintmocha','薄荷摩卡','可可和薄荷叶，凉凉的巧克力味。','摩卡放一片薄荷叶',s=>E(s)&&CM(s)&&(SY(s,'巧克力')||G(s,'可可粉'))&&G(s,'薄荷叶')],
  ['c_pourover','一杯手冲','热热的手冲，不加奶不加糖，慢慢喝出果香。','手冲，要热的，无糖',s=>s.cof==='手冲'&&!CM(s)&&s.ice==='热'&&s.sugar==='无糖']
 ].map(mkR);
-function lookC(s){const cc=COF[s.cof],m=CMILK[s.milk];let col;
- if(!cc)col=m||'#e3eef1';else if(m)col=mix(cc,m,s.cof==='双份浓缩'?.5:.62);else col=(s.cof==='浓缩'||s.cof==='双份浓缩')?(s.ice==='热'?'#3f2416':'#57331d'):cc;
- s.syr.forEach(x=>{col=mix(col,SYR[x],.08)});
- const pour=[];if(s.syr.length)pour.push([avgCol(s.syr.map(x=>[SYR[x],1])),.35]);if(m)pour.push([m,1.2]);if(cc)pour.push([m?mix(cc,m,.08):col,.9]);
+function lookC(s){const cc=COF[s.cof],m=CMILK[s.milk],fz=CFZ[s.fz||'不兑'],fv=Object.entries(s.fr||{}).filter(e=>e[1]>0),nf=fv.reduce((a,e)=>a+e[1],0);let col;
+ if(!cc)col=m||fz||'#e3eef1';else if(m)col=mix(cc,m,s.cof==='双份浓缩'?.5:.62);else col=(s.cof==='浓缩'||s.cof==='双份浓缩')?(s.ice==='热'?'#3f2416':'#57331d'):cc;
+ const ft=fv.length?avgCol(fv.map(([k,n])=>[FR[k].t,n])):null;
+ if(ft)col=mix(col,ft,Math.min(.6,(m?.1:.2)*nf+(cc?0:.3)));if(fz&&cc&&!m)col=mix(col,fz,.25);
+ s.syr.forEach(x=>{col=x==='巧克力'?mix(col,'#6e3b22',cc?.3:.55):mix(col,SYR[x],.08)});
+ const pour=[];if(s.syr.length)pour.push([avgCol(s.syr.map(x=>[SYR[x],1])),.35]);if(ft)pour.push([ft,Math.min(1.6,.5*nf)]);if(fz)pour.push([fz,1]);if(m)pour.push([m,1.2]);if(cc)pour.push([m?mix(cc,m,.08):(s.cof==='冷萃'||s.cof==='手冲'?cc:'#52301b'),.9]);
  const tops={};['珍珠','燕麦','奥利奥碎'].forEach(k=>{if(s.add[k])tops[k]=s.add[k]});
- return{cup:s.cup,col,pour,stir:s.mix==='分层'&&s.ice!=='冰沙'?0:5,tops,fruits:s.add['椰子肉']?{'椰子':s.add['椰子肉']}:{},cap:s.cap,garn:s.garn,ice:s.ice,name:nameC(s)}}
+ const fruits=Object.fromEntries(fv);if(s.add['椰子肉'])fruits['椰子']=s.add['椰子肉'];
+ return{cup:s.cup,col,pour,stir:s.mix==='分层'&&s.ice!=='冰沙'?0:5,tops,fruits,cap:s.cap,garn:s.garn.filter(g=>!CRIM.includes(g)),rimG:s.garn.filter(g=>CRIM.includes(g)),bubbles:FZ(s,'苏打水')||FZ(s,'汤力水'),ice:s.ice,name:nameC(s)}}
 function nameC(s){const cc=COF[s.cof],m=CM(s);
  const ad=Object.entries(s.add).filter(e=>e[1]>0).map(([k,n])=>k==='椰子肉'&&n>=3?'满杯椰肉':k).slice(0,2).join('');
  const sy=s.syr.length>=3?'多糖浆':s.syr.slice(0,1).join('');
@@ -470,6 +492,9 @@ function nameC(s){const cc=COF[s.cof],m=CM(s);
  let base;if(!cc)base=m?s.milk:'白开水';
  else if(m)base=(s.mix==='分层'?'脏脏':'')+({'椰乳':'生椰拿铁','冰博克':'冰博克拿铁','燕麦奶':'燕麦拿铁','厚乳':'厚乳拿铁'}[s.milk]||'拿铁');
  else base={'冷萃':'冷萃','手冲':'手冲咖啡'}[s.cof]||'美式';
+ const fv=Object.entries(s.fr||{}).filter(e=>e[1]>0).sort((a,b)=>b[1]-a[1]);
+ if(cc&&!m){const fp=fv.length>=3?'缤纷果':fv.slice(0,2).map(([k,n])=>(n>=3?'满杯':'')+(k==='橙子'?'橙C':k)).join('');const zp={'苏打水':'气泡','汤力水':'汤力','椰青水':'椰青'}[s.fz]||'';if(fp||zp)base=fp+zp+(s.fz==='汤力水'&&!fp?'咖啡':base)}
+ else if(fv.length)base=fv.slice(0,2).map(e=>e[0]).join('')+base;
  return (s.ice==='热'?'热':s.ice==='冰沙'?'':'冰')+ad+sy+cp+(s.cof==='双份浓缩'?'双份':'')+base+(s.ice==='冰沙'?'冰沙':'')}
 
 /* ---------- cocktail ---------- */
@@ -527,13 +552,13 @@ function pourB(s){const H=[],Rr=[];s.sp.forEach(x=>Rr.push([SPIRITS[x],1]));Obje
 const sugarLabel=s=>s.sugar+(s.sw&&s.sw!=='普通糖'&&s.sugar!=='无糖'?(s.sw==='纯粹真冰糖'?'（冰糖）':'（0卡糖）'):'');
 const lookT=s=>({cup:s.cup,col:liquid(s),pour:pourT(s),stir:s.ice==='冰沙'?5:0,bubbles:(s.fizz||'不加')!=='不加',tops:s.tops,fruits:{...s.fruits,...(s.veg||{})},cap:s.cap,garn:s.garn,ice:s.ice,name:autoName(s)});
 const qtyObj=(o,keys)=>Object.fromEntries(Object.entries(o||{}).filter(([k,n])=>keys.includes(k)&&n>0).map(([k,n])=>[k,Math.min(3,n)]));
-function normC(o){const s=Object.assign(clone(DEF_C),o||{});if(!(s.cof in COF))s.cof='浓缩';if(!(s.milk in CMILK))s.milk='牛奶';if(!['搅匀','分层'].includes(s.mix))s.mix='搅匀';s.syr=(s.syr||[]).filter(x=>SYR[x]);s.add=qtyObj(s.add,Object.keys(CADD));if(!(s.cap in CCAP))s.cap='不要';s.garn=(s.garn||[]).filter(x=>CGARN[x]);if(!(s.ice in ICES))s.ice='少冰';if(!SUGARS.includes(s.sugar))s.sugar='三分糖';if(!BARS.coffee.cups.includes(s.cup))s.cup='拿铁杯';return s}
+function normC(o){const s=Object.assign(clone(DEF_C),o||{});if(!(s.cof in COF))s.cof='浓缩';if(!(s.milk in CMILK))s.milk='牛奶';if(!['搅匀','分层'].includes(s.mix))s.mix='搅匀';s.syr=(s.syr||[]).filter(x=>SYR[x]);s.add=qtyObj(s.add,Object.keys(CADD));s.fr=qtyObj(s.fr,CFR);if(!(s.fz in CFZ))s.fz='不兑';if(!(s.cap in CCAP))s.cap='不要';s.garn=(s.garn||[]).filter(x=>CGARN[x]);if(!(s.ice in ICES))s.ice='少冰';if(!SUGARS.includes(s.sugar))s.sugar='三分糖';if(!BARS.coffee.cups.includes(s.cup))s.cup='拿铁杯';return s}
 function normB(o){const s=Object.assign(clone(DEF_B),o||{});s.sp=(s.sp||[]).filter(x=>SPIRITS[x]);s.mx=qtyObj(s.mx,Object.keys(MIXERS));if(!(s.fl in FLAV))s.fl='不加';if(!(s.cap in BTOP))s.cap='不要';s.gar=(s.gar||[]).filter(x=>BGAR[x]);if(!(s.ice in BICE))s.ice='正常冰';if(!BARS.bar.cups.includes(s.cup))s.cup='海波杯';return s}
 const BARS={
  tea:{label:'奶茶',R:R_TEA,cups:TEA_CUPS,def:DEF,norm:s=>{const n=norm(s);if(!TEA_CUPS.includes(n.cup))n.cup='直身杯';return n},look:lookT,meta:s=>[s.cup,sugarLabel(s),s.ice],
   secs:[{k:'cup',l:'杯型',t:'one',o:TEA_CUPS},{k:'tea',l:'茶底',t:'one',g:TEA_GROUPS.map(([n,o])=>[n,Object.keys(o)]),open:1,dot:v=>TEAS[v].c||'#f3efe6'},{k:'fruits',l:'水果',t:'qty',o:FRUIT_KEYS,open:1,dot:v=>FR[v].c},{k:'veg',l:'蔬菜',t:'qty',o:VEG_KEYS,dot:v=>FR[v].c},{k:'milk',l:'奶',t:'one',o:Object.keys(MILK),dot:v=>MILK[v]},{k:'fizz',l:'气泡',t:'one',o:FIZZ},{k:'tops',l:'小料',t:'qty',o:Object.keys(TOPS),dot:v=>TOPS[v]},{k:'cap',l:'顶上',t:'one',o:Object.keys(CAPS),dot:v=>CAPS[v]},{k:'garn',l:'点缀',t:'multi',o:Object.keys(GARN),dot:v=>GARN[v]},{k:'ice',l:'冰量',t:'one',o:Object.keys(ICES)},{k:'sw',l:'用什么糖',t:'one',o:SWS},{k:'sugar',l:'甜度',t:'one',o:SUGARS}]},
  coffee:{label:'咖啡',R:R_COF,cups:['拿铁杯','陶瓷小杯','马克杯','直身杯','胖胖杯','方杯'],def:DEF_C,norm:normC,look:lookC,meta:s=>[s.cup,s.sugar,s.ice],
-  secs:[{k:'cup',l:'杯型',t:'one',o:null},{k:'cof',l:'咖啡',t:'one',o:Object.keys(COF),open:1,dot:v=>COF[v]},{k:'milk',l:'奶',t:'one',o:Object.keys(CMILK),open:1,dot:v=>CMILK[v]},{k:'mix',l:'做法',t:'one',o:['搅匀','分层']},{k:'syr',l:'糖浆',t:'multi',o:Object.keys(SYR),dot:v=>SYR[v]},{k:'add',l:'加料',t:'qty',o:Object.keys(CADD),dot:v=>CADD[v]},{k:'cap',l:'顶上',t:'one',o:Object.keys(CCAP),dot:v=>CCAP[v]},{k:'garn',l:'点缀',t:'multi',o:Object.keys(CGARN),dot:v=>CGARN[v]},{k:'ice',l:'冰量',t:'one',o:Object.keys(ICES)},{k:'sugar',l:'甜度',t:'one',o:SUGARS}]},
+  secs:[{k:'cup',l:'杯型',t:'one',o:null},{k:'cof',l:'咖啡',t:'one',o:Object.keys(COF),open:1,dot:v=>COF[v]},{k:'milk',l:'奶',t:'one',o:Object.keys(CMILK),open:1,dot:v=>CMILK[v]},{k:'fr',l:'水果',t:'qty',o:CFR,open:1,dot:v=>FR[v].c},{k:'fz',l:'兑点什么',t:'one',o:Object.keys(CFZ),dot:v=>CFZ[v]},{k:'mix',l:'做法',t:'one',o:['搅匀','分层']},{k:'syr',l:'糖浆',t:'multi',o:Object.keys(SYR),dot:v=>SYR[v]},{k:'add',l:'加料',t:'qty',o:Object.keys(CADD),dot:v=>CADD[v]},{k:'cap',l:'顶上',t:'one',o:Object.keys(CCAP),dot:v=>CCAP[v]},{k:'garn',l:'点缀',t:'multi',o:Object.keys(CGARN),dot:v=>CGARN[v]},{k:'ice',l:'冰量',t:'one',o:Object.keys(ICES)},{k:'sugar',l:'甜度',t:'one',o:SUGARS}]},
  bar:{label:'调酒',R:R_BAR,cups:['海波杯','古典杯','马天尼杯','高脚杯','方杯'],def:DEF_B,norm:normB,look:lookB,meta:s=>[s.cup,s.ice],
   secs:[{k:'cup',l:'杯型',t:'one',o:null},{k:'sp',l:'基酒 · 可以多选',t:'multi',o:Object.keys(SPIRITS),open:1,dot:v=>SPIRITS[v]},{k:'mx',l:'调和',t:'qty',o:Object.keys(MIXERS),open:1,dot:v=>MIXERS[v]},{k:'fl',l:'果味',t:'one',o:Object.keys(FLAV),dot:v=>FLAV[v]},{k:'cap',l:'顶上',t:'one',o:Object.keys(BTOP),dot:v=>BTOP[v]},{k:'gar',l:'装饰',t:'multi',o:Object.keys(BGAR),dot:v=>BGAR[v]},{k:'ice',l:'冰',t:'one',o:Object.keys(BICE)}]}
 };
@@ -668,6 +693,7 @@ function cupSVG(d,lv,h){
  const rg=d.rimG||[];
  if(rg.includes('盐边')||rg.includes('糖边')){const g=rng(5);const n=Math.round((r-l)/6);for(let i=0;i<=n;i++){const x=l+(r-l)*i/n;front+=`<circle cx="${x.toFixed(1)}" cy="${(T-2+g()*3).toFixed(1)}" r="${(1.3+g()*.8).toFixed(1)}" fill="${rg.includes('糖边')?'#fffaf0':'#f4f4f1'}" style="stroke:var(--ink3)" stroke-width=".5"/>`}}
  if(rg.includes('柠檬片'))front+=slice(r-6,T+2,14,'#f4dc4a','#dcbd2a');
+ if(rg.includes('橙片'))front+=slice(rg.includes('柠檬片')?l+6:r-6,T+2,14,'#f7a53c','#dc841c');
  if(rg.includes('青柠角'))front+=`<path d="M${l-10} ${T} A15 15 0 0 0 ${l+20} ${T} Z" fill="#8cc152" stroke="#5f8f2c" stroke-width="1.2"/><path d="M${l-6} ${T} A11 11 0 0 0 ${l+16} ${T} Z" fill="#d4ea9f"/><path d="M${l+5} ${T} L${l-1} ${T+8} M${l+5} ${T} L${l+11} ${T+8} M${l+5} ${T} V${T+10}" stroke="#a9cf6b" stroke-width=".8"/>`;
  if(rg.includes('橙皮'))front+=`<path d="M${r-10} ${T-2} c12 -8 -8 -14 4 -22 c10 -6 -4 -12 6 -18" fill="none" stroke="#f39a2b" stroke-width="4" stroke-linecap="round"/><path d="M${r-10} ${T-2} c12 -8 -8 -14 4 -22 c10 -6 -4 -12 6 -18" fill="none" stroke="#fcd08a" stroke-width="1.2" stroke-linecap="round"/>`;
  if(rg.includes('樱桃')&&lv>0&&!C.opaque){const y=Math.min(B-10,Math.max(liq+10,T+12));front+=`<path d="M${cx-10} ${y-6} q4 -18 20 -${y-T+12}" fill="none" stroke="#5b3a1a" stroke-width="1.4" stroke-linecap="round"/>`}
@@ -777,7 +803,7 @@ function serve(){
 const pk=a=>a[Math.floor(Math.random()*a.length)],rq=(keys,p1,p2)=>{const o={};if(Math.random()<p1)o[pk(keys)]=1+Math.floor(Math.random()*2);if(Math.random()<p2)o[pk(keys)]=1;return o};
 function rand(){
  if(cur==='tea')ST.tea=BARS.tea.norm({cup:pk(TEA_CUPS),tea:pk(Object.keys(TEAS)),fruits:rq(FRUIT_KEYS,.55,.2),veg:rq(VEG_KEYS,.08,0),milk:pk(Object.keys(MILK)),tops:rq(Object.keys(TOPS),.6,.25),cap:Math.random()<.6?'不要':pk(Object.keys(CAPS)),garn:Math.random()<.25?[pk(Object.keys(GARN))]:[],ice:pk(Object.keys(ICES)),sw:Math.random()<.8?'普通糖':pk(SWS),sugar:pk(SUGARS),fizz:Math.random()<.85?'不加':pk(FIZZ.slice(1))});
- else if(cur==='coffee')ST.coffee=normC({cup:pk(BARS.coffee.cups),cof:pk(Object.keys(COF).slice(0,4)),milk:pk(Object.keys(CMILK)),mix:Math.random()<.25?'分层':'搅匀',syr:Math.random()<.4?[pk(Object.keys(SYR))]:[],add:rq(Object.keys(CADD),.3,0),cap:Math.random()<.6?'不要':pk(Object.keys(CCAP)),garn:Math.random()<.25?[pk(Object.keys(CGARN))]:[],ice:pk(Object.keys(ICES)),sugar:pk(SUGARS)});
+ else if(cur==='coffee')ST.coffee=normC({cup:pk(BARS.coffee.cups),cof:pk(Object.keys(COF).slice(0,4)),milk:pk(Object.keys(CMILK)),fr:Math.random()<.35?{[pk(CFR)]:1}:{},fz:Math.random()<.2?pk(Object.keys(CFZ).slice(1)):'不兑',mix:Math.random()<.25?'分层':'搅匀',syr:Math.random()<.4?[pk(Object.keys(SYR))]:[],add:rq(Object.keys(CADD),.3,0),cap:Math.random()<.6?'不要':pk(Object.keys(CCAP)),garn:Math.random()<.25?[pk(Object.keys(CGARN))]:[],ice:pk(Object.keys(ICES)),sugar:pk(SUGARS)});
  else{const sp=[pk(Object.keys(SPIRITS))];if(Math.random()<.15)sp.push(pk(Object.keys(SPIRITS)));ST.bar={cup:pk(BARS.bar.cups),sp:[...new Set(sp)],mx:rq(Object.keys(MIXERS),.85,.4),fl:Math.random()<.45?pk(Object.keys(FLAV).slice(1)):'不加',cap:Math.random()<.8?'不要':'蛋白泡沫',gar:Math.random()<.5?[pk(Object.keys(BGAR))]:[],ice:pk(Object.keys(BICE))};ST.bar=normB(ST.bar)}
  sync()}
 function renderBook(){
@@ -1064,7 +1090,7 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&view==='l
 ['tea','coffee','bar'].forEach(build);sync();header();connect();
 
 </script>
-<span hidden data-ver="202609291347">202609291347</span>
-<script>(function(){var V='202609291347';function chk(){try{fetch('milktea.html?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/data-ver="([0-9]+)"/);if(!m||m[1]===V)return;try{if(sessionStorage.getItem('rl')===m[1])return;sessionStorage.setItem('rl',m[1])}catch(e){}location.replace('milktea.html?v='+m[1])}).catch(function(){})}catch(e){}}document.addEventListener('visibilitychange',function(){if(!document.hidden)chk()});setTimeout(chk,1200)})();</script>
+<span hidden data-ver="202609300040">202609300040</span>
+<script>(function(){var V='202609300040';function chk(){try{fetch('milktea.html?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/data-ver="([0-9]+)"/);if(!m||m[1]===V)return;try{if(sessionStorage.getItem('rl')===m[1])return;sessionStorage.setItem('rl',m[1])}catch(e){}location.replace('milktea.html?v='+m[1])}).catch(function(){})}catch(e){}}document.addEventListener('visibilitychange',function(){if(!document.hidden)chk()});setTimeout(chk,1200)})();</script>
 
 </body></html>
