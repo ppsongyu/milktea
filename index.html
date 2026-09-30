@@ -46,6 +46,8 @@ button:focus-visible,summary:focus-visible{outline:1.5px solid var(--ink);outlin
 .lsong{display:flex;align-items:center;gap:18px;font-size:19px;letter-spacing:.22em}
 .lsong .ib{border:0;background:none}
 .lacts{display:flex;gap:10px;margin-top:26px;align-items:center}
+.ltimer{font-size:11px;color:var(--ink3);letter-spacing:.2em;margin-top:12px;min-height:16px}
+.listen{transition:opacity 8s ease}.listen.asleep{opacity:.25}
 @media (prefers-reduced-motion:reduce){.listen .cupbox svg{animation:none}}.ib .ln{stroke:var(--ink2);stroke-width:1.5}
 .ib[aria-pressed="true"]{border-color:var(--ink);color:var(--ink)}.ib[aria-pressed="true"] .ln{stroke:var(--ink)}
 .no{font-size:12px;color:var(--ink2);letter-spacing:.14em;font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -188,7 +190,7 @@ button.card:hover{background:var(--tint)}
 
 <div class="app">
   <header class="top">
-    <div><div class="brand">小肉松奶茶铺</div><div class="since">SINCE 2026.09.28 · <span style="color:var(--ink2)">更新于 09.30 10:35</span></div></div>
+    <div><div class="brand">小肉松奶茶铺</div><div class="since">SINCE 2026.09.28 · <span style="color:var(--ink2)">更新于 09.30 10:55</span></div></div>
     <div class="hr"><div class="no" id="hno"></div><div class="sbtns"><button class="ib" id="lis-btn" aria-label="只听歌模式"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="ln" d="M4 15v-3a8 8 0 0 1 16 0v3M4 15h3v5H5.5A1.5 1.5 0 0 1 4 18.5zM20 15h-3v5h1.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg></button><button class="ib" id="amb-btn" aria-pressed="false" aria-label="环境音"></button><button class="ib" id="snd-btn" aria-pressed="false" aria-label="打开声音"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="ln" d="M4 10h3l5-4v12l-5-4H4z"/><path class="ln w" d="M15.5 9.5a3.5 3.5 0 0 1 0 5M18 7a7 7 0 0 1 0 10"/><path class="ln x" d="M16 10l4 4M20 10l-4 4"/></svg></button></div></div>
   </header>
 
@@ -245,7 +247,8 @@ button.card:hover{background:var(--tint)}
     <div class="cupbox" id="l-cup"></div>
     <div class="lnow">正在播放</div>
     <div class="lsong"><button class="ib" id="l-prev" aria-label="上一首"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="ln" d="M14 6l-6 6 6 6"/></svg></button><span id="l-song"></span><button class="ib" id="l-next" aria-label="下一首"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="ln" d="M10 6l6 6-6 6"/></svg></button></div>
-    <div class="lacts"><button class="ib" id="l-amb" aria-pressed="false" aria-label="环境音"></button><button class="btn" id="l-exit">回到店里</button></div>
+    <div class="lacts"><button class="ib" id="l-amb" aria-pressed="false" aria-label="环境音"></button><button class="ib" id="l-moon" aria-pressed="false" aria-label="定时关闭：不定时"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="ln" d="M19 14.5A7.5 7.5 0 0 1 9.5 5a7.5 7.5 0 1 0 9.5 9.5z"/></svg></button><button class="btn" id="l-exit">回到店里</button></div>
+    <div class="ltimer" id="l-timer"></div>
   </section>
 
   <section id="v-book" hidden>
@@ -1131,7 +1134,8 @@ function secAt_(key,beat){const def=SONG_DEFS[key];let b=0;const NAMES={intro:'�
   toggle(){st.on=!st.on;saveSt();wake();if(!st.on)ui()},
   cycleAmb(){st.amb=(st.amb+1)%3;saveSt();wake();ui()},
   refresh,ui,isRain(){return st.amb===1},
-  listenOn(){st.on=true;saveSt();wake();ui()},nextSong(d){const i=ORDER.indexOf(st.song||'tea');st.song=ORDER[(i+d+ORDER.length)%ORDER.length];saveSt();refresh()}
+  listenOn(){st.on=true;saveSt();wake();ui()},
+  sleep(sec){if(!ctx||!master){st.on=false;st.amb=0;refresh();return}const t=ctx.currentTime;master.gain.cancelScheduledValues(t);master.gain.setValueAtTime(master.gain.value,t);master.gain.linearRampToValueAtTime(0,t+sec);setTimeout(()=>{st.on=false;st.amb=0;refresh();ui();try{master.gain.cancelScheduledValues(ctx.currentTime);master.gain.setValueAtTime(.8,ctx.currentTime)}catch(e){}},sec*1000+100)},nextSong(d){const i=ORDER.indexOf(st.song||'tea');st.song=ORDER[(i+d+ORDER.length)%ORDER.length];saveSt();refresh()}
  };
 })();
 document.getElementById('snd-btn').onclick=()=>SND.toggle();
@@ -1144,19 +1148,26 @@ async function lockScreen(){try{if(navigator.wakeLock)wakeLock=await navigator.w
 function tickClock(){const d=new Date(),p=n=>String(n).padStart(2,'0');document.getElementById('l-clock').textContent=p(d.getHours())+':'+p(d.getMinutes());document.getElementById('l-date').textContent=`${d.getMonth()+1}月${d.getDate()}日 · 星期${'日一二三四五六'[d.getDay()]}`}
 function listenCup(){let bk='tea',s=null;if(store.last&&BARS[store.last.bk]){bk=store.last.bk;s=BARS[bk].norm(store.last.s)}else if((store.favs||[])[0]){bk=store.favs[0].bk;s=BARS[bk].norm(store.favs[0].s)}else s=BARS.tea.norm({cup:'直身杯',tea:'英德红茶',fruits:{'草莓':1},milk:'牛奶',tops:{'草莓粒':2,'糯米':1},ice:'热',sw:'纯粹真冰糖'});
  const d=BARS[bk].look(s);document.getElementById('l-cup').innerHTML=cupSVG({...d,stir:d.stir>=5?5:2},100,300)}
-function enterListen(){show('listen');tickClock();listenCup();clearInterval(clockT);clockT=setInterval(tickClock,15000);SND.listenOn();lockScreen();window.scrollTo(0,0)}
-function leaveListen(){clearInterval(clockT);try{wakeLock&&wakeLock.release()}catch(e){}wakeLock=null}
+function enterListen(){asleep=false;document.getElementById('v-listen').classList.remove('asleep');show('listen');tickClock();listenCup();clearInterval(clockT);clockT=setInterval(tickClock,15000);SND.listenOn();lockScreen();window.scrollTo(0,0)}
+function leaveListen(){clearInterval(clockT);try{wakeLock&&wakeLock.release()}catch(e){}wakeLock=null;sleepSet(0)}
+const SLEEP_OPTS=[0,15,30,60];let sleepMin=0,sleepAt=0,sleepT=0,asleep=false;
+function sleepUI(){const b=document.getElementById('l-moon'),t=document.getElementById('l-timer');b.setAttribute('aria-pressed',sleepMin>0);b.setAttribute('aria-label',sleepMin?`定时关闭：${sleepMin} 分钟`:'定时关闭：不定时');
+ if(asleep){t.textContent='晚安，小肉松';return}if(!sleepMin){t.textContent='';return}const left=Math.max(0,Math.ceil((sleepAt-Date.now())/60000));t.textContent=`还剩 ${left} 分钟 · 到点自动关闭`}
+function sleepSet(m){clearInterval(sleepT);sleepMin=m;sleepAt=m?Date.now()+m*60000:0;if(m)sleepT=setInterval(sleepTick,5000);sleepUI()}
+function sleepTick(){if(!sleepMin)return;if(Date.now()>=sleepAt){clearInterval(sleepT);sleepMin=0;asleep=true;SND.sleep(10);document.getElementById('v-listen').classList.add('asleep');setTimeout(()=>{try{wakeLock&&wakeLock.release()}catch(e){}wakeLock=null},10500)}sleepUI()}
+function wakeUp(){if(!asleep)return;asleep=false;document.getElementById('v-listen').classList.remove('asleep');SND.listenOn();lockScreen();sleepUI()}
+document.getElementById('l-moon').onclick=()=>{if(asleep){wakeUp();return}const i=SLEEP_OPTS.indexOf(sleepMin);sleepSet(SLEEP_OPTS[(i+1)%SLEEP_OPTS.length])};
 document.getElementById('lis-btn').onclick=enterListen;
 document.getElementById('l-exit').onclick=()=>show('make');
 document.getElementById('l-prev').onclick=()=>SND.nextSong(-1);
 document.getElementById('l-next').onclick=()=>SND.nextSong(1);
 document.getElementById('l-amb').onclick=()=>SND.cycleAmb();
-document.addEventListener('visibilitychange',()=>{if(!document.hidden&&view==='listen'){lockScreen();tickClock()}});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&view==='listen'){if(!asleep)lockScreen();tickClock();if(sleepMin)sleepTick();else sleepUI()}});
 
 ['tea','coffee','bar'].forEach(build);sync();header();connect();
 
 </script>
-<span hidden data-ver="202609301035">202609301035</span>
-<script>(function(){var V='202609301035';function chk(){try{fetch('milktea.html?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/data-ver="([0-9]+)"/);if(!m||m[1]===V)return;try{if(sessionStorage.getItem('rl')===m[1])return;sessionStorage.setItem('rl',m[1])}catch(e){}location.replace('milktea.html?v='+m[1])}).catch(function(){})}catch(e){}}document.addEventListener('visibilitychange',function(){if(!document.hidden)chk()});setTimeout(chk,1200)})();</script>
+<span hidden data-ver="202609301055">202609301055</span>
+<script>(function(){var V='202609301055';function chk(){try{fetch('milktea.html?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/data-ver="([0-9]+)"/);if(!m||m[1]===V)return;try{if(sessionStorage.getItem('rl')===m[1])return;sessionStorage.setItem('rl',m[1])}catch(e){}location.replace('milktea.html?v='+m[1])}).catch(function(){})}catch(e){}}document.addEventListener('visibilitychange',function(){if(!document.hidden)chk()});setTimeout(chk,1200)})();</script>
 
 </body></html>
