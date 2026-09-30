@@ -177,7 +177,7 @@ button.card:hover{background:var(--tint)}
 
 <div class="app">
   <header class="top">
-    <div><div class="brand">小肉松奶茶铺</div><div class="since">SINCE 2026.09.28 · <span style="color:var(--ink2)">更新于 09.30 08:41</span></div></div>
+    <div><div class="brand">小肉松奶茶铺</div><div class="since">SINCE 2026.09.28 · <span style="color:var(--ink2)">更新于 09.30 09:00</span></div></div>
     <div class="hr"><div class="no" id="hno"></div><div class="sbtns"><button class="ib" id="lis-btn" aria-label="只听歌模式"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="ln" d="M4 15v-3a8 8 0 0 1 16 0v3M4 15h3v5H5.5A1.5 1.5 0 0 1 4 18.5zM20 15h-3v5h1.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg></button><button class="ib" id="amb-btn" aria-pressed="false" aria-label="环境音"></button><button class="ib" id="snd-btn" aria-pressed="false" aria-label="打开声音"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="ln" d="M4 10h3l5-4v12l-5-4H4z"/><path class="ln w" d="M15.5 9.5a3.5 3.5 0 0 1 0 5M18 7a7 7 0 0 1 0 10"/><path class="ln x" d="M16 10l4 4M20 10l-4 4"/></svg></button></div></div>
   </header>
 
@@ -542,6 +542,7 @@ const barOpen=()=>{if(window.__open)return true;const h=new Date().getHours();re
 /* ---------- bars ---------- */
 function pourT(s){const L=[],T=TEAS[s.tea],m=MILK[s.milk];
  if(s.tops['黑糖'])L.push(['#6b3418',.3]);
+ if(s.tops['芋泥'])L.push(['#a98bd0',.18*s.tops['芋泥']]);
  const fv=Object.entries({...s.fruits,...(s.veg||{})}).filter(e=>e[1]>0);
  if(fv.length)L.push([avgCol(fv.map(([k,n])=>[FR[k].t,n])),Math.min(1.6,.45*fv.reduce((a,e)=>a+e[1],0))]);
  if(m)L.push([m,1.1]);
@@ -577,7 +578,7 @@ function liquid(s){const T=TEAS[s.tea],m=MILK[s.milk];let c=T.c?(m?mix(T.c,m,.55
  fs.forEach(([f,n])=>{c=mix(c,FR[f].t,Math.min(.72,(m?.14:(T.c?.3:.35))*n))});
  Object.entries(s.veg||{}).forEach(([v,n])=>{if(n>0)c=mix(c,FR[v].t,Math.min(.8,(v==='羽衣甘蓝'?.35:.12)*n))});
  if(s.fizz&&s.fizz!=='不加')c=mix(c,'#ffffff',.08);
- if(s.tops['芋泥']&&m)c=mix(c,'#b99ad6',.22);
+ if(s.tops['芋泥']&&m)c=mix(c,'#b99ad6',Math.min(.42,.14*s.tops['芋泥']));
  if(s.tops['黑糖']&&!T.c&&m)c=mix(c,'#c79a72',.15);
  return c}
 function pts(seed,n,y0,y1,liq,C,pad){const r=rng(seed),o=[];for(let i=0;i<n;i++){let y=y0+r()*(y1-y0);const u=r();y=Math.min(C.B-pad,Math.max(y,liq+pad));const[a,b]=C.x(y);const w=b-a-2*pad;o.push([w>0?a+pad+u*w:(a+b)/2,y])}return o}
@@ -616,7 +617,7 @@ function cupSVG(d,lv,h){
   if(slush){const g=rng(7),dk=mix(col,'#000000',.12);for(let i=0;i<110;i++){const y=liq+3+g()*(B-liq-4),[a,b]=C.x(Math.min(B-2,y)),x=a+2+g()*Math.max(0,b-a-4),k=g();inn+=k<.6?`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(.8+g()*1.3).toFixed(1)}" fill="#fff" opacity=".75"/>`:k<.8?`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="2.4" height="2.4" fill="#fff" opacity=".85" transform="rotate(${(i*37)%90} ${x.toFixed(1)} ${y.toFixed(1)})"/>`:`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(.6+g()*.8).toFixed(1)}" fill="${dk}" opacity=".35"/>`}}
   if(tq('黑糖')&&B-liq>24){const n=3*tq('黑糖');for(let i=0;i<n;i++){const y0=liq+6,[a,b]=C.x(Math.min(B-10,y0+30)),x=i%2?b-5-(i>>1)*9:a+5+(i>>1)*9;let p=`M${x} ${y0}`,y=y0;while(y<B){p+=` q${i%2?-6:6} 8 0 16`;y+=16}inn+=`<path d="${p}" fill="none" stroke="#5b2c16" stroke-width="5" stroke-linecap="round" opacity=".34"/>`}}
   if(tq('米酒')){const hh=Math.min(H*.25,9*tq('米酒')),y=Math.max(liq,B-hh);inn+=`<path d="M0 ${y+3} Q100 ${y-2} 200 ${y+3} V${B+10} H0Z" fill="#f3ead2" opacity=".8"/>`;P('米酒',10*tq('米酒'),[y+2,B-2],3).forEach(([x,yy],i)=>inn+=`<ellipse cx="${x}" cy="${yy}" rx="2.2" ry="1.4" fill="#fffdf6" stroke="#dcd0b3" stroke-width=".5" transform="rotate(${i*41%180} ${x} ${yy})"/>`)}
-  if(tq('芋泥')){const hh=Math.min(H*.3,12*tq('芋泥')),y=Math.max(liq,B-hh);inn+=`<path d="M0 ${y+5} Q30 ${y-4} 60 ${y+3} T120 ${y+2} T200 ${y+1} V${B+10} H0Z" fill="#a98bd0"/><path d="M0 ${y+9} Q40 ${y+3} 80 ${y+8} T200 ${y+6}" fill="none" stroke="#c4aee3" stroke-width="1.2" opacity=".8"/>`}
+  if(tq('芋泥')){const hh=Math.min(H*.3,12*tq('芋泥'))*(1-.75*Math.min(1,Math.max(0,(d.stir??0)/5))),y=Math.max(liq,B-hh);inn+=`<path d="M0 ${y+5} Q30 ${y-4} 60 ${y+3} T120 ${y+2} T200 ${y+1} V${B+10} H0Z" fill="#a98bd0"/><path d="M0 ${y+9} Q40 ${y+3} 80 ${y+8} T200 ${y+6}" fill="none" stroke="#c4aee3" stroke-width="1.2" opacity=".8"/>`}
   if(tq('红豆'))P('红豆',10*tq('红豆'),zb,4).forEach(([x,y])=>inn+=`<ellipse cx="${x}" cy="${y}" rx="3.6" ry="2.8" fill="#7a2331"/><ellipse cx="${x-1}" cy="${y-1}" rx="1" ry=".6" fill="#fff" opacity=".35"/>`);
   if(tq('燕麦'))P('燕麦',12*tq('燕麦'),zb,4).forEach(([x,y],i)=>inn+=`<ellipse cx="${x}" cy="${y}" rx="3.6" ry="2" fill="#d9bf8c" stroke="#bfa06a" stroke-width=".4" transform="rotate(${i*37%180} ${x} ${y})"/>`);
   if(tq('糯米'))P('糯米',16*tq('糯米'),zb,4).forEach(([x,y],i)=>inn+=`<ellipse cx="${x}" cy="${y}" rx="2.6" ry="1.7" fill="#fbfaf5" stroke="#e2dccd" stroke-width=".6" transform="rotate(${i*53%180} ${x} ${y})"/>`);
@@ -1090,7 +1091,7 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&view==='l
 ['tea','coffee','bar'].forEach(build);sync();header();connect();
 
 </script>
-<span hidden data-ver="202609300041">202609300041</span>
-<script>(function(){var V='202609300041';function chk(){try{fetch('milktea.html?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/data-ver="([0-9]+)"/);if(!m||m[1]===V)return;try{if(sessionStorage.getItem('rl')===m[1])return;sessionStorage.setItem('rl',m[1])}catch(e){}location.replace('milktea.html?v='+m[1])}).catch(function(){})}catch(e){}}document.addEventListener('visibilitychange',function(){if(!document.hidden)chk()});setTimeout(chk,1200)})();</script>
+<span hidden data-ver="202609300100">202609300100</span>
+<script>(function(){var V='202609300100';function chk(){try{fetch('milktea.html?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/data-ver="([0-9]+)"/);if(!m||m[1]===V)return;try{if(sessionStorage.getItem('rl')===m[1])return;sessionStorage.setItem('rl',m[1])}catch(e){}location.replace('milktea.html?v='+m[1])}).catch(function(){})}catch(e){}}document.addEventListener('visibilitychange',function(){if(!document.hidden)chk()});setTimeout(chk,1200)})();</script>
 
 </body></html>
