@@ -177,7 +177,7 @@ button.card:hover{background:var(--tint)}
 
 <div class="app">
   <header class="top">
-    <div><div class="brand">小肉松奶茶铺</div><div class="since">SINCE 2026.09.28 · <span style="color:var(--ink2)">更新于 09.30 08:40</span></div></div>
+    <div><div class="brand">小肉松奶茶铺</div><div class="since">SINCE 2026.09.28 · <span style="color:var(--ink2)">更新于 09.30 08:41</span></div></div>
     <div class="hr"><div class="no" id="hno"></div><div class="sbtns"><button class="ib" id="lis-btn" aria-label="只听歌模式"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="ln" d="M4 15v-3a8 8 0 0 1 16 0v3M4 15h3v5H5.5A1.5 1.5 0 0 1 4 18.5zM20 15h-3v5h1.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg></button><button class="ib" id="amb-btn" aria-pressed="false" aria-label="环境音"></button><button class="ib" id="snd-btn" aria-pressed="false" aria-label="打开声音"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="ln" d="M4 10h3l5-4v12l-5-4H4z"/><path class="ln w" d="M15.5 9.5a3.5 3.5 0 0 1 0 5M18 7a7 7 0 0 1 0 10"/><path class="ln x" d="M16 10l4 4M20 10l-4 4"/></svg></button></div></div>
   </header>
 
@@ -836,8 +836,8 @@ document.getElementById('d-back').onclick=()=>show('book');
 matchMedia('(min-width:780px)').addEventListener('change',()=>{if(view==='make')sync()});
 /* ---------- clear, receipt, favourites, share ---------- */
 function clearCup(){const s=ST[cur];
- if(cur==='tea')Object.assign(s,{tea:'不要茶',fruits:{},milk:'不加奶',tops:{},cap:'不要',garn:[]});
- else if(cur==='coffee')Object.assign(s,{cof:'不要咖啡',milk:'不加奶',mix:'搅匀',syr:[],add:{},cap:'不要',garn:[]});
+ if(cur==='tea')Object.assign(s,{tea:'不要茶',fruits:{},veg:{},milk:'不加奶',fizz:'不加',tops:{},cap:'不要',garn:[]});
+ else if(cur==='coffee')Object.assign(s,{cof:'不要咖啡',milk:'不加奶',fr:{},fz:'不兑',mix:'搅匀',syr:[],add:{},cap:'不要',garn:[]});
  else Object.assign(s,{sp:[],mx:{},fl:'不加',cap:'不要',gar:[]});sync()}
 store.favs=store.favs||[];
 const favKey=(bk,s)=>bk+'|'+JSON.stringify(s);
@@ -1090,7 +1090,7 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&view==='l
 ['tea','coffee','bar'].forEach(build);sync();header();connect();
 
 </script>
-<span hidden data-ver="202609300040">202609300040</span>
-<script>(function(){var V='202609300040';function chk(){try{fetch('milktea.html?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/data-ver="([0-9]+)"/);if(!m||m[1]===V)return;try{if(sessionStorage.getItem('rl')===m[1])return;sessionStorage.setItem('rl',m[1])}catch(e){}location.replace('milktea.html?v='+m[1])}).catch(function(){})}catch(e){}}document.addEventListener('visibilitychange',function(){if(!document.hidden)chk()});setTimeout(chk,1200)})();</script>
+<span hidden data-ver="202609300041">202609300041</span>
+<script>(function(){var V='202609300041';function chk(){try{fetch('milktea.html?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/data-ver="([0-9]+)"/);if(!m||m[1]===V)return;try{if(sessionStorage.getItem('rl')===m[1])return;sessionStorage.setItem('rl',m[1])}catch(e){}location.replace('milktea.html?v='+m[1])}).catch(function(){})}catch(e){}}document.addEventListener('visibilitychange',function(){if(!document.hidden)chk()});setTimeout(chk,1200)})();</script>
 
 </body></html>
