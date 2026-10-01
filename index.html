@@ -506,8 +506,9 @@ const TEAS={};TEA_GROUPS.forEach(([g,o])=>Object.entries(o).forEach(([k,c])=>TEA
 const FR={'草莓':{t:'#f07c96',k:'half',c:'#e8475f'},'芒果':{t:'#f6b73c',k:'cube',c:'#f5ae2c'},'蜜桃':{t:'#f7a996',k:'cube',c:'#f5a489'},'葡萄':{t:'#8e5aa8',k:'ball',c:'#6c3a8e',r:7},'青提':{t:'#c6dc86',k:'ball',c:'#b3d36a',r:6.5},'荔枝':{t:'#f3ece0',k:'ball',c:'#f8f4ec',r:7,s:'#d9cdbb'},'柠檬':{t:'#f1e07a',k:'slice',c:'#f4dc4a',s:'#dcbd2a'},'橙子':{t:'#f5aa4c',k:'slice',c:'#f7a53c',s:'#dc841c'},'西柚':{t:'#f28b7c',k:'slice',c:'#f07262',s:'#d25243'},'菠萝':{t:'#f4d661',k:'cube',c:'#f4d04a'},'百香果':{t:'#eec350',k:'seed',c:'#f0c34a'},'椰子':{t:'#f2eee4',k:'cube',c:'#fbf8f0',s:'#dcd2c0'},'蓝莓':{t:'#5d60a8',k:'ball',c:'#3b3f85',r:4.5,many:1},'杨梅':{t:'#b3344f',k:'ball',c:'#9b1e3a',r:7,bump:1},'芭乐':{t:'#f5a9a0',k:'cube',c:'#f2878a',s:'#b9d58a'},'莲雾':{t:'#f2a4ac',k:'bell',c:'#d9364f'},'油柑':{t:'#dfe6a2',k:'ball',c:'#cad77c',r:6,s:'#a9ba58'},'黄皮':{t:'#f0d98a',k:'ball',c:'#e6c25a',r:5,many:1,s:'#c9a23a'},'苹果':{t:'#f6e6c4',k:'cube',c:'#fbf0d6',s:'#d8343f'},'杏子':{t:'#f6b765',k:'cube',c:'#f4a640'},'红柿':{t:'#f39a55',k:'cube',c:'#ef7a2a'},'杨桃':{t:'#f3e08a',k:'star',c:'#f2d54c',s:'#d4b42a'},'苦瓜':{t:'#bcd28e',k:'bitter',c:'#8fb35a',s:'#6f9440',veg:1},'羽衣甘蓝':{t:'#5f9a4a',k:'kale',c:'#4f8a3c',veg:1},'牛油果':{t:'#cad88c',k:'avo',c:'#b8cf6a',s:'#6b8a3a'},'山竹':{t:'#f3eee6',k:'segment',c:'#fbf8f2',s:'#ddd2c1'},'西瓜':{t:'#f58b8f',k:'melon',c:'#ef5b64',s:'#6fa34f'},'香蕉':{t:'#f6e9b4',k:'banana',c:'#f8edc6',s:'#e2cc7c'}};
 const FRUIT_KEYS=Object.keys(FR).filter(k=>!FR[k].veg),VEG_KEYS=Object.keys(FR).filter(k=>FR[k].veg);
 const SWS=['普通糖','纯粹真冰糖','真0卡糖'],FIZZ=['不加','雪碧','苏打水'];
-const MILK={'不加奶':null,'牛奶':'#f8f3ea','厚乳':'#f3e3c3','燕麦奶':'#ecdcc0','淡奶':'#f0e4cc','酸奶':'#f7f4ee','生打椰':'#f6f2e6'};
-const TOPS={'珍珠':'#2a1a12','芋圆':'#b79ad6','西米':'#e9e6df','脆波波':'#efe9de','爆爆珠':'#f07d6a','椰果':'#dcebe6','仙草冻':'#2f2a22','布丁':'#f5cd5a','红豆':'#7a2331','芋泥':'#a98bd0','榴莲泥':'#efcb62','花生':'#d9a86a','葡萄干':'#6a3440','麻薯':'#f3eee6','燕麦':'#d9bf8c','奥利奥碎':'#2b2522','黑糖':'#5b2c16','草莓粒':'#d93650','糯米':'#f6f3ea','米酒':'#efe6cf','桃胶':'#e3a04a','银耳':'#f4efe2','皂角米':'#e9ece2','红枣':'#9e1b23','枸杞':'#e0412a','桂圆':'#c8955a','茶冻':'#c98a3a','咖啡冻':'#4a2a18','椰子冻':'#f6f4ee','奶冻':'#f3e6c4','寒天晶球':'#dcebee','蛋糕块':'#f0d08f','黑芝麻糊':'#3d3631','姜':'#ecd593'};
+const MILK={'不加奶':null,'牛奶':'#f8f3ea','厚乳':'#f3e3c3','燕麦奶':'#ecdcc0','淡奶':'#f0e4cc','酸奶':'#f7f4ee','生打椰':'#f6f2e6','米浆':'#eee3cc'};
+const TOPS={'珍珠':'#2a1a12','芋圆':'#b79ad6','西米':'#e9e6df','脆波波':'#efe9de','爆爆珠':'#f07d6a','椰果':'#dcebe6','仙草冻':'#2f2a22','布丁':'#f5cd5a','红豆':'#7a2331','芋泥':'#a98bd0','榴莲泥':'#efcb62','花生':'#d9a86a','葡萄干':'#6a3440','麻薯':'#f3eee6','燕麦':'#d9bf8c','奥利奥碎':'#2b2522','黑糖':'#5b2c16','草莓粒':'#d93650','糯米':'#f6f3ea','米酒':'#efe6cf','桃胶':'#e3a04a','银耳':'#f4efe2','皂角米':'#e9ece2','红枣':'#9e1b23','枸杞':'#e0412a','桂圆':'#c8955a','茶冻':'#c98a3a','咖啡冻':'#4a2a18','椰子冻':'#f6f4ee','奶冻':'#f3e6c4','寒天晶球':'#dcebee','蛋糕块':'#f0d08f','黑芝麻糊':'#3d3631','姜':'#ecd593','紫薯泥':'#7b4a9e','南瓜泥':'#f0a03c','栗子泥':'#b8875a','红豆沙':'#7a3a35','绿豆沙':'#b9c98a','开心果泥':'#9cbf6a'};
+const PURE={'芋泥':['#a98bd0','#c4aee3'],'紫薯泥':['#7b4a9e','#a07cc0'],'南瓜泥':['#f0a03c','#f7c27a'],'栗子泥':['#b8875a','#d4ab83'],'红豆沙':['#7a3a35','#9e5a52'],'绿豆沙':['#b9c98a','#d3dfa9'],'开心果泥':['#9cbf6a','#bcd696'],'榴莲泥':['#efcb62','#f8e3a0'],'黑芝麻糊':['#3d3631','#8a8078']},PURE_KEYS=Object.keys(PURE);
 const CAPS={'不要':null,'奶盖':'#fbf7ee','芝士奶盖':'#fde6a4','咸酪乳':'#fdf7e9','奶油顶':'#fffdf8','雪顶':'#fff6e6','焦糖布蕾':'#f4e4b2','烤棉花糖':'#fffaf2'};
 const GARN={'可可粉':'#6b4028','抹茶粉':'#7da35a','桂花蜜':'#e8a33a','薄荷叶':'#6fae6a','茉莉花':'#fbfaf2','玫瑰瓣':'#f2a3b3','海盐':'#f4f4f1','开心果碎':'#9cc06a','糖霜':'#fffdf8'};
 const ICES={'热':0,'去冰':0,'少冰':2,'正常冰':4,'冰沙':0};
@@ -547,7 +548,7 @@ const R_TEA=[
  ['berryall','草莓全家桶','草莓、草莓粒、芝士奶盖、全糖。给最爱草莓味的小肉松。',null,s=>F(s,'草莓')&&P(s,'草莓粒')&&s.cap==='芝士奶盖'&&s.sugar==='全糖'],
  ['newyear','跨年烟花','十二月三十一日零点，烟花在杯子里噼里啪啦地炸开。生日快乐，也新年快乐。',null,s=>P(s,'爆爆珠',3)&&s.cap==='雪顶'&&s.sugar==='全糖'],
  ['water','一杯白开水','什么都没加，但多喝水总没错。','不要茶，也什么都不加',s=>TS(s,'不要茶')&&NM(s)&&bare(s)],
- ['all','小料全家福','每一口都嚼得到东西，这杯可以当饭吃。','小料至少放五种',s=>nP(s)>=5],
+ ['all','小料全家福','每一口都嚼得到东西，这杯可以当饭吃。','小料至少放五种',s=>Object.entries(s.tops).filter(([k,x])=>x>0&&!PURE[k]).length>=5],
  ['fruitall','水果捞','四种水果挤在一杯里，像把水果店搬回了家。','水果至少放四种',s=>nF(s)>=4],
  ['bitterdark','人生苦短','苦瓜配全糖再戴一顶奶盖，苦也不是，甜也不是……店长陷入沉思。','苦瓜，最甜，再戴一顶帽子',s=>V(s,'苦瓜')&&s.sugar==='全糖'&&(s.cap==='奶盖'||s.cap==='芝士奶盖')],
  ['dark','黑暗料理','水果配上红豆芋泥还全糖……店长默默递来一杯水。','水果，加不太该放的东西，再调到最甜',s=>nF(s)>0&&(P(s,'红豆')||P(s,'芋泥')||P(s,'榴莲泥')||P(s,'黑糖')||P(s,'仙草冻')||P(s,'奥利奥碎'))&&s.sugar==='全糖'],
@@ -562,6 +563,22 @@ const R_TEA=[
  ['coco','椰果奶茶','学校门口奶茶店的味道。','红茶奶茶，加透明小方块',s=>black(s)&&M(s)&&P(s,'椰果')],
  ['tiger','黑糖脏脏鲜奶','黑糖顺着杯壁流下来，像老虎的花纹。','不要茶，要奶、黑糖和珍珠',s=>TS(s,'不要茶')&&M(s)&&P(s,'黑糖')&&P(s,'珍珠')],
  ['taro','芋泥波波','紫紫的芋泥糊在杯底，配软软的波波。','要奶，紫紫的一大坨，配上波波',s=>M(s)&&P(s,'芋泥')&&P(s,'珍珠')],
+ ['mudfull','一杯全是泥','满满一杯泥，吸管插进去都站得住。',null,s=>TS(s,'不要茶')&&NM(s)&&PURE_KEYS.reduce((a,k)=>a+(s.tops[k]||0),0)>=3],
+ ['rainbowmud','彩虹泥','五种颜色的泥一层层叠起来，像一杯彩虹蛋糕。',null,s=>PURE_KEYS.filter(k=>(s.tops[k]||0)>0).length>=5],
+ ['purpletaro','紫薯芋泥','深紫叠浅紫，紫薯泥和芋泥交错在一起。','要奶，紫薯泥加芋泥',s=>M(s)&&P(s,'紫薯泥')&&P(s,'芋泥')],
+ ['purplemilk','紫薯牛乳','紫薯泥沉在牛奶底下，搅开是一杯淡淡的紫。','不要茶，牛奶，紫薯泥',s=>TS(s,'不要茶')&&M(s)&&P(s,'紫薯泥')],
+ ['pumpkinoat','南瓜燕麦乳','南瓜泥配燕麦奶，像一碗秋天的早餐。','燕麦奶加南瓜泥',s=>s.milk==='燕麦奶'&&P(s,'南瓜泥')],
+ ['pumpkin','南瓜奶茶','南瓜泥沉在红茶奶茶底下，搅开是暖暖的橙色。','红茶奶茶，加南瓜泥',s=>black(s)&&M(s)&&P(s,'南瓜泥')],
+ ['chestbrulee','栗子布蕾','栗子泥打底，顶上烧一层焦糖，敲开以后栗子香和焦糖香一起冒出来。','栗子泥，顶上焦糖布蕾，烧好敲开',s=>P(s,'栗子泥')&&s.cap==='焦糖布蕾'&&!!s.cr],
+ ['chestnut','栗子奶茶','栗子泥绵绵沙沙的，像秋天街上糖炒栗子的香。','奶茶，加栗子泥',s=>M(s)&&P(s,'栗子泥')&&!!TEAS[s.tea].c],
+ ['redbeanmilk','红豆沙牛乳','红豆磨成沙沉在牛奶底下，搅开是浅浅的豆沙色。','不要茶，牛奶，红豆沙',s=>TS(s,'不要茶')&&M(s)&&P(s,'红豆沙')],
+ ['redbeanmt','红豆沙奶茶','红茶奶茶配红豆沙，甜得很踏实。','红茶奶茶，加红豆沙',s=>black(s)&&M(s)&&P(s,'红豆沙')],
+ ['greenbeanice','绿豆沙冰','绿豆沙加冰，冰冰沙沙的，广东糖水铺夏天的那一碗。','不要茶不要奶，绿豆沙，加冰',s=>TS(s,'不要茶')&&NM(s)&&P(s,'绿豆沙')&&!['热','温'].includes(s.ice)],
+ ['greenbeanmilk','绿豆沙牛乳','绿豆沙配牛奶，清清的豆香。','不要茶，牛奶，绿豆沙',s=>TS(s,'不要茶')&&M(s)&&P(s,'绿豆沙')],
+ ['pistachio','开心果奶绿','开心果泥配绿茶奶，嫩绿嫩绿的，坚果香很浓。','绿茶加奶，开心果泥',s=>TEAS[s.tea].g==='绿茶 · 白茶'&&M(s)&&P(s,'开心果泥')],
+ ['ricepeanut','花生米浆','米浆里再撒一把花生，花生香加倍。','不要茶，米浆，加花生',s=>TS(s,'不要茶')&&s.milk==='米浆'&&P(s,'花生')],
+ ['ricemilktea','米浆红茶','红茶兑米浆，台湾早餐店里的老搭配。','红茶加米浆',s=>black(s)&&s.milk==='米浆'],
+ ['ricemilk','古早味米浆','米和花生磨出来的米浆，甜甜的、稠稠的，台湾早餐店的味道。','不要茶，只要米浆',s=>TS(s,'不要茶')&&s.milk==='米浆'&&bare(s)],
  ['bday','生日蛋糕','蛋糕放满，顶上的棉花糖烤得焦焦的，像插着一圈小蜡烛。许个愿再喝吧。',null,s=>P(s,'蛋糕块',3)&&s.cap==='烤棉花糖'&&s.tc>=1],
  ['gingerhot','一口就辣到','三份姜，别的什么都没放……店长喝了一口，眼泪都辣出来了。',null,s=>P(s,'姜',3)&&Object.values(s.tops).filter(n=>n>0).length===1&&NM(s)&&!Object.values(s.fruits).some(n=>n>0)],
  ['gingerbroke','撞散了','姜撞奶要热奶一冲才凝得住，冰的还拿去摇……这下彻底撞散了。',null,s=>s.sk>0&&TS(s,'不要茶')&&M(s)&&P(s,'姜')],
@@ -888,6 +905,7 @@ function pourT(s){const L=[],T=TEAS[s.tea],m=MILK[s.milk];
  if(s.tops['芋泥'])L.push(['#a98bd0',.18*s.tops['芋泥']]);
  if(s.tops['榴莲泥'])L.push(['#e9c35a',.18*s.tops['榴莲泥']]);
  if(s.tops['黑芝麻糊'])L.push(['#3a332e',.18*s.tops['黑芝麻糊']]);
+ ['紫薯泥','南瓜泥','栗子泥','红豆沙','绿豆沙','开心果泥'].forEach(k=>{if(s.tops[k])L.push([PURE[k][0],.18*s.tops[k]])});
  if(s.tops['蛋糕块'])L.unshift(['#e9d6a6',.1*s.tops['蛋糕块']]);
  const fv=Object.entries({...s.fruits,...(s.veg||{})}).filter(e=>e[1]>0);
  if(fv.length)L.push([avgCol(fv.map(([k,n])=>[FR[k].t,n])),Math.min(1.6,.45*fv.reduce((a,e)=>a+e[1],0))]);
@@ -903,7 +921,7 @@ function normC(o){const s=Object.assign(clone(DEF_C),o||{});if(!(s.cof in COF))s
 function normB(o){const s=Object.assign(clone(DEF_B),o||{});s.sp=(s.sp||[]).filter(x=>SPIRITS[x]);s.mx=qtyObj(s.mx,Object.keys(MIXERS));if(!(s.fl in FLAV))s.fl='不加';if(!(s.cap in BTOP))s.cap='不要';s.gar=(s.gar||[]).filter(x=>BGAR[x]);if(!(s.ice in BICE))s.ice='正常冰';if(!BARS.bar.cups.includes(s.cup))s.cup='海波杯';return s}
 const BARS={
  tea:{label:'奶茶',R:R_TEA,cups:TEA_CUPS,def:DEF,norm:s=>{const n=norm(s);if(!TEA_CUPS.includes(n.cup))n.cup='直身杯';return n},look:lookT,meta:s=>[s.cup,sugarLabel(s),s.ice],
-  secs:[{k:'cup',l:'杯型',t:'one',o:TEA_CUPS},{k:'tea',l:'茶底',t:'one',g:TEA_GROUPS.map(([n,o])=>[n,Object.keys(o)]),open:1,dot:v=>TEAS[v].c||'#f3efe6'},{k:'fruits',l:'水果',t:'qty',o:FRUIT_KEYS,open:1,dot:v=>FR[v].c},{k:'veg',l:'蔬菜',t:'qty',o:VEG_KEYS,dot:v=>FR[v].c},{k:'milk',l:'奶',t:'one',o:Object.keys(MILK),dot:v=>MILK[v]},{k:'fizz',l:'气泡',t:'one',o:FIZZ},{k:'tops',l:'小料',t:'qty',o:Object.keys(TOPS),dot:v=>TOPS[v]},{k:'cap',l:'顶上',t:'one',o:Object.keys(CAPS),dot:v=>CAPS[v]},{k:'garn',l:'点缀',t:'multi',o:Object.keys(GARN),dot:v=>GARN[v]},{k:'ice',l:'冰量',t:'one',o:Object.keys(ICES)},{k:'sw',l:'用什么糖',t:'one',o:SWS},{k:'sugar',l:'甜度',t:'one',o:SUGARS}]},
+  secs:[{k:'cup',l:'杯型',t:'one',o:TEA_CUPS},{k:'tea',l:'茶底',t:'one',g:TEA_GROUPS.map(([n,o])=>[n,Object.keys(o)]),open:1,dot:v=>TEAS[v].c||'#f3efe6'},{k:'fruits',l:'水果',t:'qty',o:FRUIT_KEYS,open:1,dot:v=>FR[v].c},{k:'veg',l:'蔬菜',t:'qty',o:VEG_KEYS,dot:v=>FR[v].c},{k:'milk',l:'奶',t:'one',o:Object.keys(MILK),dot:v=>MILK[v]},{k:'fizz',l:'气泡',t:'one',o:FIZZ},{k:'tops',l:'小料',t:'qty',o:Object.keys(TOPS).filter(k=>!PURE[k]),dot:v=>TOPS[v]},{k:'tops',id:'pu',l:'泥',t:'qty',o:PURE_KEYS,dot:v=>PURE[v][0]},{k:'cap',l:'顶上',t:'one',o:Object.keys(CAPS),dot:v=>CAPS[v]},{k:'garn',l:'点缀',t:'multi',o:Object.keys(GARN),dot:v=>GARN[v]},{k:'ice',l:'冰量',t:'one',o:Object.keys(ICES)},{k:'sw',l:'用什么糖',t:'one',o:SWS},{k:'sugar',l:'甜度',t:'one',o:SUGARS}]},
  coffee:{label:'咖啡',R:R_COF,cups:['拿铁杯','陶瓷小杯','马克杯','直身杯','胖胖杯','方杯'],def:DEF_C,norm:normC,look:lookC,meta:s=>[s.cup,s.sugar,s.ice],
   secs:[{k:'cup',l:'杯型',t:'one',o:null},{k:'cof',l:'咖啡',t:'one',o:Object.keys(COF),open:1,dot:v=>COF[v]},{k:'milk',l:'奶',t:'one',o:Object.keys(CMILK),open:1,dot:v=>CMILK[v]},{k:'fr',l:'水果',t:'qty',o:CFR,open:1,dot:v=>FR[v].c},{k:'fz',l:'兑点什么',t:'one',o:Object.keys(CFZ),dot:v=>CFZ[v]},{k:'mix',l:'做法',t:'one',o:['搅匀','分层']},{k:'syr',l:'糖浆',t:'multi',o:Object.keys(SYR),dot:v=>SYR[v]},{k:'add',l:'加料',t:'qty',o:Object.keys(CADD),dot:v=>CADD[v]},{k:'cap',l:'顶上',t:'one',o:Object.keys(CCAP),dot:v=>CCAP[v]},{k:'garn',l:'点缀',t:'multi',o:Object.keys(CGARN),dot:v=>CGARN[v]},{k:'ice',l:'冰量',t:'one',o:Object.keys(ICES)},{k:'sugar',l:'甜度',t:'one',o:SUGARS}]},
  bar:{label:'调酒',R:R_BAR,cups:['海波杯','古典杯','马天尼杯','高脚杯','方杯'],def:DEF_B,norm:normB,look:lookB,meta:s=>[s.cup,s.ice],
@@ -928,6 +946,7 @@ function liquid(s){const T=TEAS[s.tea],m=MILK[s.milk];let c=T.c?(m?mix(T.c,m,.55
  if(s.fizz&&s.fizz!=='不加')c=mix(c,'#ffffff',.08);
  if(s.tops['芋泥']&&m)c=mix(c,'#b99ad6',Math.min(.42,.14*s.tops['芋泥']));
  if(s.tops['榴莲泥']&&m)c=mix(c,'#f1d27e',Math.min(.4,.13*s.tops['榴莲泥']));
+ ['紫薯泥','南瓜泥','栗子泥','红豆沙','绿豆沙','开心果泥'].forEach(k=>{if(s.tops[k])c=mix(c,PURE[k][0],Math.min(.5,(m?.14:.2)*s.tops[k]))});
  if(s.tops['黑芝麻糊'])c=mix(c,'#5d554e',Math.min(.5,(m?.14:.2)*s.tops['黑芝麻糊']));
  if(s.tops['桃胶']>=3&&!T.c)c=mix(c,'#efc98a',.12);
  if(s.tops['黑糖']&&!T.c&&m)c=mix(c,'#c79a72',.15);
@@ -969,11 +988,22 @@ function cupSVG(d,lv,h){
   if(slush){const g=rng(7),dk=mix(col,'#000000',.12);for(let i=0;i<110;i++){const y=liq+3+g()*(B-liq-4),[a,b]=C.x(Math.min(B-2,y)),x=a+2+g()*Math.max(0,b-a-4),k=g();inn+=k<.6?`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(.8+g()*1.3).toFixed(1)}" fill="#fff" opacity=".75"/>`:k<.8?`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="2.4" height="2.4" fill="#fff" opacity=".85" transform="rotate(${(i*37)%90} ${x.toFixed(1)} ${y.toFixed(1)})"/>`:`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(.6+g()*.8).toFixed(1)}" fill="${dk}" opacity=".35"/>`}}
   if(tq('黑糖')&&B-liq>24&&!d.shk){const n=3*tq('黑糖');for(let i=0;i<n;i++){const y0=liq+6,[a,b]=C.x(Math.min(B-10,y0+30)),x=i%2?b-5-(i>>1)*9:a+5+(i>>1)*9;let p=`M${x} ${y0}`,y=y0;while(y<B){p+=` q${i%2?-6:6} 8 0 16`;y+=16}inn+=`<path d="${p}" fill="none" stroke="#5b2c16" stroke-width="5" stroke-linecap="round" opacity=".34"/>`}}
   if(tq('米酒')){const hh=Math.min(H*.25,9*tq('米酒')),y=Math.max(liq,B-hh);inn+=`<path d="M0 ${y+3} Q100 ${y-2} 200 ${y+3} V${B+10} H0Z" fill="#f3ead2" opacity=".8"/>`;P('米酒',10*tq('米酒'),[y+2,B-2],3).forEach(([x,yy],i)=>inn+=`<ellipse cx="${x}" cy="${yy}" rx="2.2" ry="1.4" fill="#fffdf6" stroke="#dcd0b3" stroke-width=".5" transform="rotate(${i*41%180} ${x} ${yy})"/>`)}
-  if(tq('芋泥')){const hh=Math.min(H*.3,12*tq('芋泥'))*(1-.75*Math.min(1,Math.max(0,(d.stir??0)/5))),y=Math.max(liq,B-hh);inn+=`<path d="M0 ${y+5} Q30 ${y-4} 60 ${y+3} T120 ${y+2} T200 ${y+1} V${B+10} H0Z" fill="#a98bd0"/><path d="M0 ${y+9} Q40 ${y+3} 80 ${y+8} T200 ${y+6}" fill="none" stroke="#c4aee3" stroke-width="1.2" opacity=".8"/>`}
-  if(tq('榴莲泥')){const k=1-.75*Math.min(1,Math.max(0,(d.stir??0)/5)),th=tq('芋泥')?Math.min(H*.3,12*tq('芋泥'))*k:0,hh=Math.min(H*.3,12*tq('榴莲泥'))*k,y=Math.max(liq,B-th-hh),yb=th?Math.max(y+2,B-th+4):B+10;
-   inn+=`<path d="M0 ${y+4} Q25 ${y-5} 55 ${y+2} T115 ${y+1} T200 ${y+3} V${yb} H0Z" fill="#efcb62"/>`;const g=rng(31);for(let i=0;i<9;i++){const yy=y+5+g()*Math.max(1,Math.min(yb,B)-y-9),xx=10+g()*170;inn+=`<path d="M${xx.toFixed(1)} ${yy.toFixed(1)} q6 -3 12 0" fill="none" stroke="#f8e3a0" stroke-width="1.3" stroke-linecap="round" opacity=".9"/>`}}
-  if(tq('黑芝麻糊')){const k=1-.75*Math.min(1,Math.max(0,(d.stir??0)/5)),o=((tq('芋泥')?Math.min(H*.3,12*tq('芋泥')):0)+(tq('榴莲泥')?Math.min(H*.3,12*tq('榴莲泥')):0))*k,hh=Math.min(H*.3,12*tq('黑芝麻糊'))*k,y=Math.max(liq,B-o-hh),yb=o?Math.max(y+2,B-o+4):B+10;
-   inn+=`<path d="M0 ${y+4} Q30 ${y-4} 70 ${y+2} T140 ${y+1} T200 ${y+3} V${yb} H0Z" fill="#3d3631"/>`;const g=rng(77);for(let i=0;i<16;i++){const yy=y+4+g()*Math.max(1,Math.min(yb,B)-y-7),xx=8+g()*184;inn+=`<circle cx="${xx.toFixed(1)}" cy="${yy.toFixed(1)}" r="${(.5+g()*.8).toFixed(1)}" fill="#8a8078" opacity=".8"/>`}}
+  {const PU=PURE_KEYS.filter(k=>tq(k)).map(k=>[k,PURE[k][0],PURE[k][1]]);
+   if(PU.length){const f=Math.min(1,Math.max(0,(d.stir??0)/5)),k=1-.75*f,amp=3.5+2.5*f,g=rng(hash(PU.map(p=>p[0]).join(''))+7),avail=Math.max(4,B-liq-1),tot=PU.reduce((a,p)=>a+tq(p[0]),0),per=avail/3*Math.min(1,3/tot);
+    const avg=avgCol(PU.map(p=>[p[1],tq(p[0])])),cl=c=>mix(c,avg,f*.65);let acc=0;
+    const L=PU.map(p=>{acc+=tq(p[0])*per*k;return{p,top:Math.max(liq,B-acc)}});
+    const wave=(y,sd)=>{const r=rng(sd);let w=`M-2 ${(y+r()*4-2).toFixed(1)}`;for(let x=-2;x<202;x+=25){w+=` Q${x+12.5} ${(y+(r()*2-1)*amp).toFixed(1)} ${x+25} ${(y+(r()*2-1)*amp*.6).toFixed(1)}`}return w};
+    const top=L[L.length-1],fid='pf'+id,tc=cl(top.p[1]);defs+=`<linearGradient id="${fid}" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="${tc}" stop-opacity="${(.35+.3*f).toFixed(2)}"/><stop offset="1" stop-color="${tc}" stop-opacity="0"/></linearGradient>`;
+    if(top.top>liq+2)inn+=`<rect x="-2" y="${(top.top-11-16*f).toFixed(1)}" width="204" height="${(15+16*f).toFixed(1)}" fill="url(#${fid})"/>`;
+    for(let i=L.length-1;i>=0;i--)inn+=`<path d="${wave(L[i].top,31+i*17)} V${B+10} H-2Z" fill="${cl(L[i].p[1])}"/>`;
+    L.forEach(({p,top:t},i)=>{const bot=i?L[i-1].top:B,hh=Math.max(2,bot-t),op=(1-f*.85).toFixed(2);
+     if(p[0]==='榴莲泥')for(let j=0;j<Math.max(4,hh/4);j++){const yy=t+4+g()*Math.max(1,hh-6),xx=10+g()*170;inn+=`<path d="M${xx.toFixed(1)} ${yy.toFixed(1)} q6 -3 12 0" fill="none" stroke="${p[2]}" stroke-width="1.3" stroke-linecap="round" opacity="${op}"/>`}
+     else if(p[0]==='黑芝麻糊')for(let j=0;j<Math.max(8,hh);j++){const yy=t+3+g()*Math.max(1,hh-5),xx=8+g()*184;inn+=`<circle cx="${xx.toFixed(1)}" cy="${yy.toFixed(1)}" r="${(.5+g()*.8).toFixed(1)}" fill="${p[2]}" opacity="${op}"/>`}
+     else{if(['栗子泥','红豆沙','绿豆沙'].includes(p[0]))for(let j=0;j<Math.round(hh*1.2);j++){const yy=t+3+g()*Math.max(1,hh-5),xx=6+g()*188;inn+=`<circle cx="${xx.toFixed(1)}" cy="${yy.toFixed(1)}" r="${(.4+g()*.7).toFixed(1)}" fill="${mix(p[1],'#000000',.25)}" opacity="${(.5*(1-f*.85)).toFixed(2)}"/>`}
+      if(hh>10)for(let j=0;j<1;j++){const yy=t+5+g()*Math.max(1,Math.min(14,hh-8));inn+=`<path d="M-2 ${yy.toFixed(1)} Q${(30+g()*40).toFixed(1)} ${(yy-4).toFixed(1)} ${(90+g()*20).toFixed(1)} ${(yy+2).toFixed(1)} T202 ${(yy-1).toFixed(1)}" fill="none" stroke="${p[2]}" stroke-width="1.2" opacity="${(.6*(1-f*.85)).toFixed(2)}"/>`}}});
+    const rib=(x0,len,y,th,ph,col,o)=>{let up='',dn='';for(let q=0;q<=14;q++){const u=q/14,x=x0+u*len,yy=y+Math.sin(u*Math.PI*2+ph)*2,t=th*Math.sin(u*Math.PI);up+=(q?' L':'M')+x.toFixed(1)+' '+(yy-t/2).toFixed(1);dn=' L'+x.toFixed(1)+' '+(yy+t/2).toFixed(1)+dn}return`<path d="${up}${dn} Z" fill="${col}" opacity="${o}"/>`};
+    for(let i=1;i<L.length;i++){const y=L[i-1].top,lo=L[i-1].p[1],hi=L[i].p[1],md=mix(lo,hi,.5),hU=L[i-1].top-L[i].top,hL=(i>1?L[i-2].top:B)-L[i-1].top,o=(.85*(1-f*.8)).toFixed(2),th=1+f*2.2;
+     for(let j=0;j<3;j++){const len=60+g()*110,x0=-10+g()*(200-len*.6);inn+=rib(x0,len,y-2-g()*Math.min(9,hU*.6),(2.4+g()*2.6)*th,g()*6,mix(lo,md,f),o);inn+=rib(-10+g()*(200-len*.6),len,y+2+g()*Math.min(9,hL*.6),(2.4+g()*2.6)*th,g()*6,mix(hi,md,f),o)}}}}
   if(tq('红枣'))P('红枣',3*tq('红枣'),zb,7).forEach(([x,y],i)=>inn+=`<g transform="rotate(${(i*41)%180} ${x} ${y})"><ellipse cx="${x}" cy="${y}" rx="6" ry="4.2" fill="#9b1c24"/><path d="M${x-3} ${y-1.5} q2 2 0 3.5 M${x+1} ${y-2} q2 2 0 4" fill="none" stroke="#6e1016" stroke-width=".7"/><ellipse cx="${x-2}" cy="${y-1.8}" rx="1.4" ry=".7" fill="#fff" opacity=".35"/></g>`);
   if(tq('姜'))P('姜',3*tq('姜'),zm,7).forEach(([x,y],i)=>inn+=`<g transform="rotate(${(i*47)%180} ${x} ${y})"><ellipse cx="${x}" cy="${y}" rx="6.2" ry="4.6" fill="#f4e3aa" stroke="#c9a560" stroke-width=".9"/><path d="M${x-3.5} ${y-1} q3.5 -1.5 7 0 M${x-3} ${y+1.6} q3 -1.2 6 0" fill="none" stroke="#d9bf72" stroke-width=".6"/></g>`);
   if(tq('桂圆'))P('桂圆',4*tq('桂圆'),zm,6).forEach(([x,y])=>inn+=`<circle cx="${x}" cy="${y}" r="4.8" fill="#f1e8d2" fill-opacity=".85" stroke="#d6c39c" stroke-width=".7"/><circle cx="${x+.6}" cy="${y+.6}" r="1.7" fill="#3a2416"/><circle cx="${x-1.8}" cy="${y-1.8}" r=".9" fill="#fff" opacity=".7"/>`);
@@ -1112,11 +1142,11 @@ let cur='tea',bookBar='tea';
 const cupIcon=v=>`<svg viewBox="20 18 180 230" width="13" height="17" aria-hidden="true"><path d="${CUPS[v].d}" class="ln" style="stroke-width:11"/></svg>`;
 function build(bk){const B_=BARS[bk],Pn=document.getElementById('panel-'+bk);
  B_.secs.forEach(sec=>{const d=document.createElement('details');if(sec.open)d.open=true;
-  d.innerHTML=`<summary><span class="sl">${sec.l}</span><span class="sv" id="sv-${bk}-${sec.k}"></span></summary><div class="body"></div>`;const body=d.lastChild;
+  d.innerHTML=`<summary><span class="sl">${sec.l}</span><span class="sv" id="sv-${bk}-${sec.id||sec.k}"></span></summary><div class="body"></div>`;const body=d.lastChild;
   const dot=v=>{const c=sec.dot&&sec.dot(v);return c?`<span class="dot" style="background:${c}"></span>`:''};
   const add=(wrap,v,i)=>{
    if(sec.t==='qty'){const q=document.createElement('span');q.className='q';q.dataset.k=sec.k;q.dataset.v=v;
-    q.innerHTML=`<button id="o-${bk}-${sec.k}-${i}">${dot(v)}${v}<span class="dots"><i></i><i></i><i></i></span></button><button class="mi" aria-label="${v}少放一份" hidden>−</button>`;
+    q.innerHTML=`<button id="o-${bk}-${sec.id||sec.k}-${i}">${dot(v)}${v}<span class="dots"><i></i><i></i><i></i></span></button><button class="mi" aria-label="${v}少放一份" hidden>−</button>`;
     q.firstChild.onclick=()=>{const s=ST[bk];s[sec.k][v]=Math.min(3,(s[sec.k][v]||0)+1);sync();if(v==='爆爆珠')SND.fx('pop')};
     q.lastChild.onclick=()=>{const s=ST[bk],c=s[sec.k][v]||0;if(c<=1)delete s[sec.k][v];else s[sec.k][v]=c-1;sync()};wrap.appendChild(q)}
    else{const b=document.createElement('button');b.className='chip';b.id=`o-${bk}-${sec.k}-${i}`;b.dataset.k=sec.k;b.dataset.v=v;b.dataset.t=sec.t;
@@ -1125,7 +1155,7 @@ function build(bk){const B_=BARS[bk],Pn=document.getElementById('panel-'+bk);
   if(sec.g){let i=0;sec.g.forEach(([gn,vs])=>{const h=document.createElement('div');h.className='gh';h.textContent=gn;body.appendChild(h);const w=document.createElement('div');w.className='chips';vs.forEach(v=>add(w,v,i++));body.appendChild(w)})}
   else{const w=document.createElement('div');w.className='chips';sec.o.forEach((v,i)=>add(w,v,i));body.appendChild(w)}
   Pn.appendChild(d)})}
-function summ(sec,s){const v=s[sec.k]??(sec.t==='qty'?{}:sec.t==='multi'?[]:'');if(sec.t==='qty'){const e=Object.entries(v).filter(x=>x[1]>0);return e.length?e.map(([k,n])=>n>1?k+'×'+n:k).join('  '):'不加'}if(sec.t==='multi')return v.length?v.join('  '):'不加';return v}
+function summ(sec,s){const v=s[sec.k]??(sec.t==='qty'?{}:sec.t==='multi'?[]:'');if(sec.t==='qty'){const e=Object.entries(v).filter(x=>x[1]>0&&(!Array.isArray(sec.o)||sec.o.includes(x[0])));return e.length?e.map(([k,n])=>n>1?k+'×'+n:k).join('  '):'不加'}if(sec.t==='multi')return v.length?v.join('  '):'不加';return v}
 let mStir={},mKey={},mCan=false;
 function stirUI(p,v,can,init){const box=document.getElementById(p+'-stir');box.hidden=!can;if(!can)return;
  document.querySelectorAll('#'+p+'-sdots i').forEach((e,i)=>e.classList.toggle('f',i<Math.floor(v+1e-6)));
@@ -1142,7 +1172,7 @@ function sync(){handSync();
  if(closed){mCan=false;document.getElementById('m-stir').hidden=true;document.getElementById('m-cup').innerHTML=cupSVG({cup:'马天尼杯',col:'#eee',name:'打烊中'},0,big?260:190);document.getElementById('m-name').textContent='打烊中';document.getElementById('m-meta').textContent='每晚 20:00 开门';return}
  Pn.querySelectorAll('.chip').forEach(b=>{const k=b.dataset.k,v=b.dataset.v;b.setAttribute('aria-pressed',b.dataset.t==='multi'?s[k].includes(v):s[k]===v)});
  Pn.querySelectorAll('.q').forEach(q=>{const n=(s[q.dataset.k]||{})[q.dataset.v]||0;q.classList.toggle('on',n>0);q.querySelectorAll('.dots i').forEach((d,i)=>d.classList.toggle('f',i<n));q.lastChild.hidden=n===0});
- BARS[cur].secs.forEach(sec=>document.getElementById(`sv-${cur}-${sec.k}`).textContent=summ(sec,s));
+ BARS[cur].secs.forEach(sec=>document.getElementById(`sv-${cur}-${sec.id||sec.k}`).textContent=summ(sec,s));
  const d=BARS[cur].look(s),key=JSON.stringify({...s,pd:0,la:0,tc:0,cr:0});
  if(mKey[cur]!==key){mKey[cur]=key;mStir[cur]=d.stir??5}
  drawMake();
@@ -1278,7 +1308,7 @@ function pound(x){if(PST.busy)return;const s=ST[cur],cup=BARS[cur].look(s).cup;x
   const sv=el.querySelector('.pest svg');if(!sv)return;const r=sv.getBoundingClientRect();pound((e.clientX-r.left)/r.width*220-10)},true)})();
 // ---------- 手作：摇雪克杯 ----------
 const SK_R=new Set(['gingerbroke','b_strawdaiq','fullhand','paomo','paomog','shakemt','b_snow','b_wlady','b_plady','b_daiq','tigerrun','spray','slowshake','paomosj','shakegreen','shakeoolong','passiongreen','lemongreen','shakefruit','shakemilk','b_spray']);
-const PD_R=new Set(['fullhand','handlemon','handorange','handyougan','handhuangpi','b_handmojito','purple','mashberry','mashgrape','mashgreengrape','mashmelon','mashguava','mashblue','mashstar','b_berrymojito','b_grapehiball']),LA_R=new Set(['c_art']),TC_R=new Set(['bday','hojibrulee','brulee','smores','c_camp','c_brulee','c_smores']);
+const PD_R=new Set(['fullhand','handlemon','handorange','handyougan','handhuangpi','b_handmojito','purple','mashberry','mashgrape','mashgreengrape','mashmelon','mashguava','mashblue','mashstar','b_berrymojito','b_grapehiball']),LA_R=new Set(['c_art']),TC_R=new Set(['chestbrulee','bday','hojibrulee','brulee','smores','c_camp','c_brulee','c_smores']);
 function hico(id){let o='';if(PD_R.has(id))o+='<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="6.2" y="1" width="3.6" height="14" rx="1.8" transform="rotate(28 8 8)" fill="#a8774a"/></svg>';if(SK_R.has(id))o+='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 1.5h6l1.6 12.5H3.4Z" fill="#c3c7cc" stroke="#8d929a" stroke-width=".8"/><path d="M3.6 12.2h8.8" stroke="#8d929a" stroke-width=".9"/></svg>';if(TC_R.has(id))o+='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5C9.5 4.5 13 6.5 13 10a5 5 0 0 1-10 0c0-2 1-3.2 2-4 0 1.5.8 2.4 1.6 2.6C6.4 6.4 7 4 8 1.5Z" fill="#ec8a3a"/><path d="M8 8.5c1 1.2 2 2 2 3.2a2 2 0 0 1-4 0c0-1 .9-2 2-3.2Z" fill="#f6c24a"/></svg>';if(LA_R.has(id))o+='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 13.5C3 10 1.5 7.5 2.6 5.2 3.6 3.2 6.4 3 8 5.3 9.6 3 12.4 3.2 13.4 5.2 14.5 7.5 13 10 8 13.5Z" fill="#d9a07a"/></svg>';return o?`<span class="hico">${o}</span>`:''}
 const SHK_CUPS=['直身杯','胖胖杯','方杯','海波杯','古典杯'];
 const TC_CAPS=['焦糖布蕾','烤棉花糖'];const tcOK=(bk,s)=>bk!=='bar'&&TC_CAPS.includes(s.cap);
