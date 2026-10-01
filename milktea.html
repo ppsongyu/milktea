@@ -382,7 +382,7 @@ button.card:hover{background:var(--tint)}
 
 <div class="app">
   <header class="top">
-    <div><div class="brand">小肉松奶茶铺</div><div class="since">SINCE 2026.09.28 · <span style="color:var(--ink2)">更新于 10.01 11:17</span></div></div>
+    <div><div class="brand">小肉松奶茶铺</div><div class="since">SINCE 2026.09.28 · <span style="color:var(--ink2)">更新于 10.01 11:27</span></div></div>
     <div class="hr"><div class="no" id="hno"></div><div class="sbtns"><button class="ib" id="lis-btn" aria-label="只听歌模式"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="ln" d="M4 15v-3a8 8 0 0 1 16 0v3M4 15h3v5H5.5A1.5 1.5 0 0 1 4 18.5zM20 15h-3v5h1.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg></button><button class="ib" id="amb-btn" aria-pressed="false" aria-label="环境音"></button><button class="ib" id="snd-btn" aria-pressed="false" aria-label="打开声音"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="ln" d="M4 10h3l5-4v12l-5-4H4z"/><path class="ln w" d="M15.5 9.5a3.5 3.5 0 0 1 0 5M18 7a7 7 0 0 1 0 10"/><path class="ln x" d="M16 10l4 4M20 10l-4 4"/></svg></button></div></div>
   </header>
 
@@ -858,6 +858,7 @@ function pourT(s){const L=[],T=TEAS[s.tea],m=MILK[s.milk];
  if(s.tops['芋泥'])L.push(['#a98bd0',.18*s.tops['芋泥']]);
  if(s.tops['榴莲泥'])L.push(['#e9c35a',.18*s.tops['榴莲泥']]);
  if(s.tops['黑芝麻糊'])L.push(['#3a332e',.18*s.tops['黑芝麻糊']]);
+ if(s.tops['蛋糕块'])L.unshift(['#e9d6a6',.1*s.tops['蛋糕块']]);
  const fv=Object.entries({...s.fruits,...(s.veg||{})}).filter(e=>e[1]>0);
  if(fv.length)L.push([avgCol(fv.map(([k,n])=>[FR[k].t,n])),Math.min(1.6,.45*fv.reduce((a,e)=>a+e[1],0))]);
  if(m)L.push([m,1.1]);
@@ -952,7 +953,11 @@ function cupSVG(d,lv,h){
   if(tq('枸杞'))P('枸杞',8*tq('枸杞'),zt,4).forEach(([x,y],i)=>inn+=`<ellipse cx="${x}" cy="${y}" rx="3.2" ry="1.7" fill="#e0412a" transform="rotate(${i*61%180} ${x} ${y})"/>`);
   [['茶冻','#c98a3a',.75],['咖啡冻','#4a2a18',.9],['椰子冻','#fbfaf6',.92],['奶冻','#f3e6c4',.95]].forEach(([k,c,op])=>{if(tq(k))P(k,5*tq(k),zm,7).forEach(([x,y],i)=>inn+=`<g transform="rotate(${(i*37+k.length*13)%60-30} ${x} ${y})"><rect x="${x-5}" y="${y-5}" width="10" height="10" rx="2" fill="${c}" fill-opacity="${op}" stroke="${mix(c,'#000000',.15)}" stroke-opacity=".35" stroke-width=".6"/><rect x="${x-3.2}" y="${y-3.2}" width="3.6" height="2" rx="1" fill="#fff" opacity=".4"/></g>`)});
   if(tq('寒天晶球'))P('寒天晶球',8*tq('寒天晶球'),zm,5).forEach(([x,y])=>inn+=`<circle cx="${x}" cy="${y}" r="4.2" fill="#fff" fill-opacity=".28" stroke="#fff" stroke-width=".9"/><circle cx="${x-1.4}" cy="${y-1.5}" r="1.1" fill="#fff" opacity=".9"/>`);
-  if(tq('蛋糕块'))P('蛋糕块',3*tq('蛋糕块'),zm,9).forEach(([x,y],i)=>inn+=`<g transform="rotate(${(i*29)%40-20} ${x} ${y})"><rect x="${x-7}" y="${y-5.5}" width="14" height="11" rx="1.5" fill="#f3d999" stroke="#d6b466" stroke-width=".6"/><rect x="${x-7}" y="${y-5.5}" width="14" height="2.4" rx="1" fill="#b8742e"/><rect x="${x-7}" y="${y-.2}" width="14" height="1.8" fill="#fffaf0"/></g>`);
+  if(tq('蛋糕块')){const n=tq('蛋糕块'),k=Math.min(1,Math.max(0,(d.stir??0)/5)),e=k*k*(3-2*k),[a0,b0]=C.x(B-6),bw=Math.max(20,(b0-a0-8)*[0,.55,.75,.92][n]),bh=[0,16,21,27][n],x0=(a0+b0)/2-bw/2,y0=B-bh-3,cols=n+2,rows=2,pw=bw/cols,ph=bh/rows,g=rng(hash('cake'+n));
+   for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){const ix=x0+c*pw,iy=y0+r*ph,tyy=zm[0]+g()*(B-zm[0]-12),[ta,tb]=C.x(Math.min(B-4,tyy+6)),tx=ta+4+g()*Math.max(1,tb-ta-8-pw*.6),rot=(g()*2-1)*50*e,sc=1-.38*e,x=ix+(tx-ix)*e,y=iy+(tyy-iy)*e,w=pw*sc+.6,h=ph*sc+.6,cxp=x+w/2,cyp=y+h/2;
+    inn+=`<g transform="rotate(${rot.toFixed(1)} ${cxp.toFixed(1)} ${cyp.toFixed(1)})"><rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" rx="${(1+2*e).toFixed(1)}" fill="#f3d999" stroke="#d6b466" stroke-width=".6" stroke-opacity="${(e).toFixed(2)}"/>${r===0?`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${(2.6*sc).toFixed(1)}" fill="#b8742e"/><rect x="${x.toFixed(1)}" y="${(y+h-1.8*sc).toFixed(1)}" width="${w.toFixed(1)}" height="${(1.8*sc).toFixed(1)}" fill="#fffaf0"/>`:''}</g>`}
+   if(k<.05)inn+=`<rect x="${x0.toFixed(1)}" y="${y0.toFixed(1)}" width="${bw.toFixed(1)}" height="${bh}" rx="2" fill="none" stroke="#d6b466" stroke-width=".7"/>`;
+   for(let i=0;i<Math.round(26*e*n);i++){const yy=zm[0]+g()*(B-zm[0]-4),[ta,tb]=C.x(yy),xx=ta+3+g()*Math.max(1,tb-ta-6);inn+=`<circle cx="${xx.toFixed(1)}" cy="${yy.toFixed(1)}" r="${(.6+g()*1.1).toFixed(1)}" fill="#e8c97f" opacity=".85"/>`}}
   if(d.xm)P('玄米',12,zt,4).forEach(([x,y],i)=>inn+=`<ellipse cx="${x}" cy="${y}" rx="2.4" ry="1.5" fill="#c98d4a" stroke="#a06a30" stroke-width=".5" transform="rotate(${i*53%180} ${x} ${y})"/>`);
   if(tq('花生'))P('花生',9*tq('花生'),zb,4).forEach(([x,y],i)=>inn+=`<g transform="rotate(${(i*47)%180} ${x} ${y})"><ellipse cx="${x}" cy="${y}" rx="4.2" ry="3" fill="#e2b77b" stroke="#b98a4e" stroke-width=".6"/><path d="M${x} ${y-2.6} V${y+2.6}" stroke="#c6955a" stroke-width=".7"/></g>`);
   if(tq('葡萄干'))P('葡萄干',9*tq('葡萄干'),[B-.22*H,B-.04*H],4).forEach(([x,y],i)=>inn+=`<g transform="rotate(${(i*61)%180} ${x} ${y})"><path d="M${x-3.6} ${y} q1 -3 3.6 -2.6 q3 .2 3.4 2.4 q-.4 2.8 -3.4 2.6 q-3 -.2 -3.6 -2.4z" fill="#6a3440"/><path d="M${x-2} ${y-.6} q1.2 1 2.6 .2 M${x-.4} ${y+1.2} q1.4 -.4 2 -1.4" fill="none" stroke="#8d4c5a" stroke-width=".6"/></g>`);
@@ -1877,7 +1882,7 @@ document.querySelector('.top .brand').onclick=()=>show('home');
 show('home');
 
 </script>
-<span hidden data-ver="202610011117">202610011117</span>
-<script>(function(){var V='202610011117';function chk(){try{fetch('milktea.html?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/data-ver="([0-9]+)"/);if(!m||m[1]===V)return;try{if(sessionStorage.getItem('rl')===m[1])return;sessionStorage.setItem('rl',m[1])}catch(e){}location.replace('milktea.html?v='+m[1])}).catch(function(){})}catch(e){}}document.addEventListener('visibilitychange',function(){if(!document.hidden)chk()});setTimeout(chk,1200)})();</script>
+<span hidden data-ver="202610011127">202610011127</span>
+<script>(function(){var V='202610011127';function chk(){try{fetch('milktea.html?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/data-ver="([0-9]+)"/);if(!m||m[1]===V)return;try{if(sessionStorage.getItem('rl')===m[1])return;sessionStorage.setItem('rl',m[1])}catch(e){}location.replace('milktea.html?v='+m[1])}).catch(function(){})}catch(e){}}document.addEventListener('visibilitychange',function(){if(!document.hidden)chk()});setTimeout(chk,1200)})();</script>
 
 </body></html>
