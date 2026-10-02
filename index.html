@@ -404,7 +404,7 @@ button.card:hover{background:var(--tint)}
 
 <div class="app">
   <header class="top">
-    <div><div class="brand">小肉松奶茶铺</div><div class="since">SINCE 2026.09.28 · <span style="color:var(--ink2)">更新于 10.02 15:02</span></div></div>
+    <div><div class="brand">小肉松奶茶铺</div><div class="since">SINCE 2026.09.28 · <span style="color:var(--ink2)">更新于 10.02 15:08</span></div></div>
     <div class="hr"><div class="no" id="hno"></div><div class="sbtns"><button class="ib" id="lis-btn" aria-label="只听歌模式"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="ln" d="M4 15v-3a8 8 0 0 1 16 0v3M4 15h3v5H5.5A1.5 1.5 0 0 1 4 18.5zM20 15h-3v5h1.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg></button><button class="ib" id="amb-btn" aria-pressed="false" aria-label="环境音"></button><button class="ib" id="snd-btn" aria-pressed="false" aria-label="打开声音"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="ln" d="M4 10h3l5-4v12l-5-4H4z"/><path class="ln w" d="M15.5 9.5a3.5 3.5 0 0 1 0 5M18 7a7 7 0 0 1 0 10"/><path class="ln x" d="M16 10l4 4M20 10l-4 4"/></svg></button></div></div>
   </header>
 
@@ -1043,7 +1043,7 @@ const MSHORT={'番茄汁':'番茄','菠萝汁':'菠萝','莓莓桃桃':'莓莓�
 function nameB(s){const fl=FLAV[s.fl]?s.fl:'';const sp=s.sp.length>=4?'烈酒全家':s.sp.slice(0,2).join('');
  const mx=Object.entries(s.mx).filter(e=>e[1]>0).map(e=>MSHORT[e[0]]).filter(Boolean).slice(0,2).join('');
  let n=(s.ice==='温'?'温':'')+((s.bt||{})['小熊软糖']?'小熊':'')+fl+(sp||'无酒精')+mx;if(!s.sp.length&&!mx&&!fl)n='一杯冰水';return n}
-const barOpen=()=>{if(window.__open)return true;const h=new Date().getHours();return h>=20||h<5};
+const barOpen=()=>true;
 
 /* ---------- bars ---------- */
 function pourT(s){const L=[],T=TEAS[s.tea],m=MILK[s.milk];if(s.tea==='蝶豆花'&&(s.fruits['柠檬']||0)>0){MUD_KEYS.forEach(k=>{if(s.tops[k])L.push([PURE[k][0],.18*s.tops[k]])});L.push([m?mix('#3d6fcf',m,.5):'#3d6fcf',1.4],[m?'#c3a6df':'#a062c9',1]);return L}
@@ -1088,12 +1088,13 @@ function hex(h){return[1,3,5].map(i=>parseInt(h.substr(i,2),16))}
 function mix(a,b,t){const A=hex(a),B=hex(b);return'#'+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,'0')).join('')}
 function hash(str){let h=7;for(const ch of str)h=(h*31+ch.charCodeAt(0))>>>0;return h||1}
 function rng(seed){let x=seed>>>0||1;return()=>{x^=x<<13;x>>>=0;x^=x>>>17;x^=x<<5;x>>>=0;return x/4294967296}}
+const VEG_W={'羽衣甘蓝':.35,'紫甘蓝':.35,'甜菜根':.35};
 function liquid(s){const T=TEAS[s.tea],m=MILK[s.milk];let c=T.c?(m?mix(T.c,m,.55):T.c):(m||'#e3eef1');
  const fs=Object.entries(s.fruits).filter(e=>e[1]>0);
  if(fs.length&&!T.c&&!m)c=FR[fs[0][0]].t;
  const bfl=s.tea==='蝶豆花'&&(s.fruits['柠檬']||0)>0,cab=(s.veg||{})['紫甘蓝']>0&&(s.fruits['柠檬']||0)>0;if(bfl)c=mix(c,m?'#b99ad8':'#9d5cc8',.8);
  fs.forEach(([f,n])=>{if((bfl||cab)&&f==='柠檬')return;c=mix(c,FR[f].t,Math.min(.72,(m?.14:(T.c?.3:.35))*n))});
- Object.entries(s.veg||{}).forEach(([v,n])=>{if(n>0)c=mix(c,FR[v].t,Math.min(.8,(['羽衣甘蓝','紫甘蓝','甜菜根'].includes(v)?.35:.12)*n))});if(cab)c=mix(c,m?'#e7a6c8':'#de5a9c',.75);
+ Object.entries(s.veg||{}).forEach(([v,n])=>{if(n>0)c=mix(c,FR[v].t,Math.min(.8,(VEG_W[v]||.12)*n))});if(cab)c=mix(c,m?'#e7a6c8':'#de5a9c',.75);
  if(s.fizz&&s.fizz!=='不加')c=mix(c,'#ffffff',.08);
  if(s.tops['芋泥']&&m)c=mix(c,'#b99ad6',Math.min(.42,.14*s.tops['芋泥']));
  if(s.tops['榴莲泥']&&m)c=mix(c,'#f1d27e',Math.min(.4,.13*s.tops['榴莲泥']));
@@ -2181,7 +2182,7 @@ document.querySelector('.top .brand').onclick=()=>show('home');
 show('home');
 
 </script>
-<span hidden data-ver="202610021502">202610021502</span>
-<script>(function(){var V='202610021502';function chk(){try{fetch('milktea.html?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/data-ver="([0-9]+)"/);if(!m||m[1]===V)return;try{if(sessionStorage.getItem('rl')===m[1])return;sessionStorage.setItem('rl',m[1])}catch(e){}location.replace('milktea.html?v='+m[1])}).catch(function(){})}catch(e){}}document.addEventListener('visibilitychange',function(){if(!document.hidden)chk()});setTimeout(chk,1200)})();</script>
+<span hidden data-ver="202610021508">202610021508</span>
+<script>(function(){var V='202610021508';function chk(){try{fetch('milktea.html?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/data-ver="([0-9]+)"/);if(!m||m[1]===V)return;try{if(sessionStorage.getItem('rl')===m[1])return;sessionStorage.setItem('rl',m[1])}catch(e){}location.replace('milktea.html?v='+m[1])}).catch(function(){})}catch(e){}}document.addEventListener('visibilitychange',function(){if(!document.hidden)chk()});setTimeout(chk,1200)})();</script>
 
 </body></html>
