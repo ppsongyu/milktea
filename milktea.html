@@ -427,11 +427,12 @@ button.card:hover{background:var(--tint)}
 .drn .btn{padding:6px 16px}
 .card .co{font-size:10.5px;color:var(--ink3);letter-spacing:.1em;margin-top:-2px}
 .hico .pen{color:var(--ink3);display:flex}
+.fzp{transform-box:fill-box;transform-origin:center;animation:fzp 2.2s ease-out infinite}@keyframes fzp{0%{transform:scale(.2);opacity:0}30%{opacity:1}80%{transform:scale(1);opacity:1}87%{transform:scale(1.6);opacity:0}100%{opacity:0}}
 </style>
 
 <div class="app">
   <header class="top">
-    <div><div class="brand">小肉松奶茶铺</div><div class="since">SINCE 2026.09.28 · <span style="color:var(--ink2)">更新于 11.10 12:27</span></div></div>
+    <div><div class="brand">小肉松奶茶铺</div><div class="since">SINCE 2026.09.28 · <span style="color:var(--ink2)">更新于 11.10 15:35</span></div></div>
     <div class="hr"><div class="no" id="hno"></div><div class="sbtns"><button class="ib" id="lis-btn" aria-label="只听歌模式"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="ln" d="M4 15v-3a8 8 0 0 1 16 0v3M4 15h3v5H5.5A1.5 1.5 0 0 1 4 18.5zM20 15h-3v5h1.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg></button><button class="ib" id="amb-btn" aria-pressed="false" aria-label="环境音"></button><button class="ib" id="snd-btn" aria-pressed="false" aria-label="打开声音"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="ln" d="M4 10h3l5-4v12l-5-4H4z"/><path class="ln w" d="M15.5 9.5a3.5 3.5 0 0 1 0 5M18 7a7 7 0 0 1 0 10"/><path class="ln x" d="M16 10l4 4M20 10l-4 4"/></svg></button></div></div>
   </header>
 
@@ -877,6 +878,9 @@ const R_TEA=[
  ['s_cocoa','冬夜可可','不要茶，热牛奶戴一顶奶油，撒上可可粉，窝在被子里喝。','不要茶，热牛奶，奶油顶撒可可',s=>TS(s,'不要茶')&&s.milk==='牛奶'&&s.ice==='热'&&s.cap==='奶油顶'&&G(s,'可可粉'),'冬'],
  ['s_stove','围炉煮茶','热红茶加黑糖和红豆，像围着炉子慢慢煮出来的。','热红茶，加黑糖和红豆',s=>black(s)&&s.ice==='热'&&P(s,'黑糖')&&P(s,'红豆'),'冬'],
  ['s_pear','围炉小吊梨','梨炖得透透的，再丢两颗红枣，捧着热热的一碗坐在炉子边，窗外好像要下雪了。','小吊梨，红枣，热的',s=>P(s,'小吊梨')&&P(s,'红枣')&&s.ice==='热','冬'],
+ ['whisksnow','一碗雪','刷了又刷，沫细得像刚下的雪。宋朝人管这个叫点茶，店长管这个叫手酸。',null,s=>TS(s,'抹茶')&&wkLv(s.wk)>=3],
+ ['whisk','点一碗抹茶','小竹刷在杯子里刷出一层细细的绿沫，不加奶不加糖。苦是苦的，香也是真的香。','抹茶，热的，不加奶，无糖，用小竹刷刷出沫',s=>TS(s,'抹茶')&&NM(s)&&s.ice==='热'&&s.sugar==='无糖'&&wkLv(s.wk)>=2],
+ ['whisklatte','手刷抹茶牛乳','先把抹茶刷开刷匀，再遇见牛奶。没有一颗结块，绿得很干净。','抹茶加牛奶，自己刷一刷',s=>TS(s,'抹茶')&&s.milk==='牛奶'&&wkLv(s.wk)>=2],
  ['plain','无糖清茶','什么都不加的一杯，今天很自律。','纯茶，不加奶不加料，无糖',s=>!!TEAS[s.tea].c&&NM(s)&&bare(s)&&s.sugar==='无糖']
 ].map(mkR);
 
@@ -903,7 +907,12 @@ Object.assign(CUPS,{
  '子弹杯':{d:'M68 150 L132 150 L127 238 L73 238 Z',T:152,B:222,rim:[68,132],straw:0,x:y=>{const t=Math.min(1,Math.max(0,(y-150)/88));return[71+5*t,129-5*t]},extra:'<rect x="74" y="224" width="52" height="13" class="gl"/><path class="ln" d="M74 224 L126 224"/>'},
  '马天尼杯':{d:'M28 40 L172 40 L100 132 Z',T:42,B:128,rim:[28,172],straw:0,x:y=>{const hw=Math.max(0,72*(132-y)/92-5);return[100-hw,100+hw]},extra:'<path class="ln" d="M100 132 L100 229"/><ellipse class="ln" cx="100" cy="233" rx="40" ry="5"/>'}
 });
-const TEA_CUPS=['直身杯','胖胖杯','牛奶瓶','马克杯','高脚杯','方杯'];
+const qbx=(y,a,b,c)=>{const A=a[1]-2*b[1]+c[1],Bq=2*(b[1]-a[1]),Cq=a[1]-y;let t=Math.abs(A)<1e-6?-Cq/Bq:(-Bq+Math.sqrt(Math.max(0,Bq*Bq-4*A*Cq)))/(2*A);if(!(t>=0&&t<=1))t=(-Bq-Math.sqrt(Math.max(0,Bq*Bq-4*A*Cq)))/(2*A);t=Math.max(0,Math.min(1,t));return(1-t)*(1-t)*a[0]+2*t*(1-t)*b[0]+t*t*c[0]};
+Object.assign(CUPS,{
+ '大肚杯':{d:'M52 70 L148 70 Q176 120 172 170 Q168 226 128 240 L72 240 Q32 226 28 170 Q24 120 52 70 Z',T:72,B:227,rim:[52,148],straw:1,sa:5,sx:4,x:y=>{const xr=y<170?qbx(Math.max(70,y),[148,70],[176,120],[172,170]):qbx(Math.min(240,y),[172,170],[168,226],[128,240]);return[204-xr,xr-4]},extra:'<path d="M53.5 229.5 Q100 235 146.5 229.5 Q138 238.6 128 239 L72 239 Q62 238.6 53.5 229.5Z" class="gl"/><path class="ln" d="M54.5 229.5 Q100 235 145.5 229.5"/>'},
+ '竖纹杯':{d:'M46 60 L154 60 L154 230 Q154 240 144 240 L56 240 Q46 240 46 230 Z',T:62,B:222,rim:[46,154],straw:1,x:()=>[50,150],extra:'<path d="M58 62V222M70 62V222M82 62V222M94 62V222M106 62V222M118 62V222M130 62V222M142 62V222" stroke="#fff" stroke-width="5" opacity=".2" fill="none"/><path d="M52 62V238M64 62V238M76 62V238M88 62V238M100 62V238M112 62V238M124 62V238M136 62V238M148 62V238" stroke="#000" stroke-width="1" opacity=".13" fill="none"/><path d="M47 224 H153 V230 Q153 239 144 239 H56 Q47 239 47 230Z" class="gl"/><path class="ln" d="M46 224 L154 224"/>'}
+});
+const TEA_CUPS=['直身杯','胖胖杯','牛奶瓶','马克杯','高脚杯','方杯','大肚杯','竖纹杯'];
 
 /* ---------- coffee ---------- */
 const COF={'浓缩':'#3b2217','双份浓缩':'#2a150d','冷萃':'#4a2a18','手冲':'#7a4322','不要咖啡':null};
@@ -1146,7 +1155,7 @@ const BARS={
   secs:[{k:'cup',l:'杯型',t:'one',o:TEA_CUPS},{k:'tea',l:'茶底',t:'one',g:TEA_GROUPS.map(([n,o])=>[n,Object.keys(o)]),open:1,dot:v=>TEAS[v].c||'#f3efe6'},{k:'fruits',l:'水果',t:'qty',o:FRUIT_KEYS,open:1,dot:v=>FR[v].c},{k:'veg',l:'蔬菜',t:'qty',o:VEG_KEYS,dot:v=>FR[v].c},{k:'milk',l:'奶',t:'one',o:Object.keys(MILK),dot:v=>MILK[v]},{k:'fizz',l:'气泡',t:'one',o:FIZZ},{k:'tops',l:'小料',t:'qty',o:Object.keys(TOPS).filter(k=>!PURE[k]),dot:v=>TOPS[v]},{k:'tops',id:'pu',l:'泥',t:'qty',o:PURE_KEYS,dot:v=>PURE[v][0]},{k:'tops',id:'ch',l:'巧克力',t:'qty',o:CHOC_KEYS,dot:v=>PURE[v][0]},{k:'cap',l:'顶上',t:'one',o:Object.keys(CAPS),dot:v=>CAPS[v]},{k:'garn',l:'点缀',t:'multi',o:Object.keys(GARN),dot:v=>GARN[v]},{k:'ice',l:'冰量',t:'one',o:Object.keys(ICES)},{k:'sw',l:'用什么糖',t:'one',o:SWS},{k:'sugar',l:'甜度',t:'one',o:SUGARS}]},
  coffee:{label:'咖啡',R:R_COF,cups:['拿铁杯','陶瓷小杯','马克杯','直身杯','胖胖杯','方杯'],def:DEF_C,norm:normC,look:lookC,meta:s=>[s.cup,s.sugar,s.ice],
   secs:[{k:'cup',l:'杯型',t:'one',o:null},{k:'cof',l:'咖啡',t:'one',o:Object.keys(COF),open:1,dot:v=>COF[v]},{k:'milk',l:'奶',t:'one',o:Object.keys(CMILK),open:1,dot:v=>CMILK[v]},{k:'fr',l:'水果',t:'qty',o:CFR,open:1,dot:v=>FR[v].c},{k:'fz',l:'兑点什么',t:'one',o:Object.keys(CFZ),dot:v=>CFZ[v]},{k:'mix',l:'做法',t:'one',o:['搅匀','分层']},{k:'syr',l:'糖浆',t:'multi',o:Object.keys(SYR),dot:v=>SYR[v]},{k:'add',l:'加料',t:'qty',o:Object.keys(CADD),dot:v=>CADD[v]},{k:'cap',l:'顶上',t:'one',o:Object.keys(CCAP),dot:v=>CCAP[v]},{k:'garn',l:'点缀',t:'multi',o:Object.keys(CGARN),dot:v=>CGARN[v]},{k:'ice',l:'冰量',t:'one',o:Object.keys(ICES)},{k:'sugar',l:'甜度',t:'one',o:SUGARS}]},
- bar:{label:'调酒',R:R_BAR,cups:['海波杯','古典杯','马天尼杯','子弹杯','高脚杯','方杯'],def:DEF_B,norm:normB,look:lookB,meta:s=>[s.cup,s.ice],
+ bar:{label:'调酒',R:R_BAR,cups:['海波杯','古典杯','马天尼杯','子弹杯','高脚杯','方杯','竖纹杯'],def:DEF_B,norm:normB,look:lookB,meta:s=>[s.cup,s.ice],
   secs:[{k:'cup',l:'杯型',t:'one',o:null},{k:'sp',l:'基酒 · 可以多选',t:'multi',o:Object.keys(SPIRITS),g:SP_GROUPS,open:1,dot:v=>SPIRITS[v]},{k:'mx',l:'调和',t:'qty',o:Object.keys(MIXERS),g:MX_GROUPS,open:1,dot:v=>MIXERS[v]},{k:'sy',l:'糖浆 · 调味',t:'qty',o:Object.keys(BSY),dot:v=>BSY[v]},{k:'fl',l:'果味',t:'one',o:Object.keys(FLAV),dot:v=>FLAV[v]},{k:'fr',l:'水果 · 草本',t:'qty',o:BFR,dot:v=>FR[v].c},{k:'cap',l:'顶上',t:'one',o:Object.keys(BTOP),dot:v=>BTOP[v]},{k:'gar',l:'装饰',t:'multi',o:Object.keys(BGAR).filter(k=>k!=='盐边'&&k!=='糖边'),dot:v=>BGAR[v]},{k:'bt',l:'小料',t:'qty',o:Object.keys(BTOPS),dot:v=>BTOPS[v]},{k:'ice',l:'冰',t:'one',o:Object.keys(BICE)}]}
 };
 BARS.coffee.secs[0].o=BARS.coffee.cups;BARS.bar.secs[0].o=BARS.bar.cups;
@@ -1499,10 +1508,11 @@ function cupSVG(d,lv,h){
   });
   for(let i=0;i<tq('布丁');i++){
     const y=Math.max(liq+4,B-26-i*18),x=cx-20+(i%2?8:-6);
-    inn+=`<rect x="${x}" y="${y}" width="40" height="22" rx="6" fill="#f5cd5a"/>
+    const jg=AG.v?(Math.sin(performance.now()/1000*11+i*2)*10*AG.v).toFixed(1):0;
+    inn+=`<g transform="translate(${x+20} ${y+22}) skewX(${jg}) translate(${-(x+20)} ${-(y+22)})"><rect x="${x}" y="${y}" width="40" height="22" rx="6" fill="#f5cd5a"/>
       <rect x="${x}" y="${y}" width="40" height="8" rx="4" fill="#c47830"/>
       <rect x="${x+2}" y="${y+1.5}" width="16" height="3" rx="1.5" fill="#fff" opacity=".25"/>
-      <rect x="${x+5}" y="${y+12}" width="12" height="3.5" rx="1.5" fill="#fff" opacity=".3"/>`;
+      <rect x="${x+5}" y="${y+12}" width="12" height="3.5" rx="1.5" fill="#fff" opacity=".3"/></g>`;
   }
   if(tq('西米'))P('西米',14*tq('西米'),zm,3.5).forEach(([x,y])=>{
     inn+=`<circle cx="${x}" cy="${y}" r="2.6" fill="rgba(255,255,255,.45)" stroke="rgba(255,255,255,.9)" stroke-width=".7"/>
@@ -1543,8 +1553,8 @@ function cupSVG(d,lv,h){
    if(m.kind==='pulp'){
      const g=rng(hash('pulp'+m.k)+lv*17), juiceN=4+lv*3, pulpN=Math.max(3,cnt);
      // 杯底汁滩（重捶更明显，搅拌时略抬高、变淡）
-     const poolH=Math.min(H*.22, 6+lv*4)*(1-stirSpread*.35);
-     const poolY=B-poolH, poolOp=(.22+lv*.08)*(1-stirSpread*.4);
+     const sf=Math.min(1,Math.max(0,(d.stir??0)/5)),poolH=Math.min(H*.22, 6+lv*4)*(1-stirSpread*.35)*(1+1.8*sf);
+     const poolY=B-poolH, poolOp=(.22+lv*.08)*(1-stirSpread*.4)*(1-sf)*(1-sf);
      if(poolH>3){
        const pc=m.t||m.c;
        inn+=`<path d="M0 ${poolY+2} Q100 ${poolY-3-av*4} 200 ${poolY+2} V${B+8} H0Z" fill="${pc}" opacity="${poolOp.toFixed(2)}" clip-path="url(#q${id})"/>`;
@@ -1675,6 +1685,7 @@ function cupSVG(d,lv,h){
   }
   inn+=svF;
   if(d.bubbles){const g=rng(99);for(let i=0;i<(d.pour&&d.pour.length>=4?34:22);i++){const y=Math.max(liq+6,T+H*.1+g()*H*.85),[a,b]=C.x(y),w=b-a-8;if(w<=0){g();g();continue}const x=a+4+g()*w;inn+=`<circle class="bub" style="animation-delay:-${(g()*2.6).toFixed(2)}s" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(1.1+g()*1.4).toFixed(1)}" fill="none" stroke="rgba(255,255,255,.95)" stroke-width=".9"/>`}}
+  if(d.bubbles&&!hasCap&&!slush){const g=rng(123),tn=performance.now()/1000,[a,b]=C.x(Math.min(B-2,liq+3));for(let i=0;i<12;i++){const x=a+4+g()*Math.max(0,b-a-8);inn+=`<circle class="fzp" style="animation-delay:-${((tn+g()*2.2)%2.2).toFixed(2)}s" cx="${x.toFixed(1)}" cy="${(liq+1.4+g()*2).toFixed(1)}" r="${(.8+g()*1.1).toFixed(1)}" fill="#fff" fill-opacity=".5" stroke="#fff" stroke-width=".5"/>`}}
   if((d.rimG||[]).includes('樱桃')){const y=Math.min(B-10,Math.max(liq+10,T+12)),x=cx-10;inn+=`<circle cx="${x}" cy="${y}" r="7" fill="#c8102e"/><circle cx="${x+1.5}" cy="${y+1.5}" r="5.5" fill="#a50d26" opacity=".35"/><circle cx="${x-2.2}" cy="${y-2.4}" r="1.8" fill="#fff" opacity=".55"/>`}
   const ni=ICEN[d.ice];
   const wob=k=>{const v=AG.v;if(!v)return'0 0';const tn=performance.now()/1000;return`${(Math.sin(tn*5.3+k*1.7)*3.4*v).toFixed(2)} ${(Math.cos(tn*4.1+k*2.3)*2.6*v).toFixed(2)}`};
@@ -1690,6 +1701,8 @@ function cupSVG(d,lv,h){
    if(d.fm===2){defs+=`<linearGradient id="${fg}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffdf8"/><stop offset=".75" stop-color="#f8efe1"/><stop offset="1" stop-color="${mix('#e9d6bc',col,.3)}"/></linearGradient>`;inn+=`<path d="${men(y0)} V${liq} Q160 ${liq+5} 100 ${liq+1} T-2 ${liq} Z" fill="url(#${fg})"/>`;for(let i=0;i<3;i++)inn+=`<path d="M${30+i*50} ${(liq+2).toFixed(1)} q12 -7 24 -1 t22 -2" fill="none" stroke="${col}" stroke-width="2" opacity=".35" stroke-linecap="round"/>`}
    if(d.fm===3)for(let i=0;i<22;i++){const x=4+g()*192,y=y0+1+g()*Math.max(1,ch-3),rr=1.8+g()*3.4;inn+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${rr.toFixed(1)}" fill="#fffaf0" fill-opacity=".4" stroke="#c4ad7e" stroke-width=".7"/><circle cx="${(x-rr*.35).toFixed(1)}" cy="${(y-rr*.35).toFixed(1)}" r="${(rr*.25).toFixed(1)}" fill="#fff"/>`}}
   if(d.lc&&!hasCap&&!slush){const fh=[0,Math.min(5,H*.04),Math.min(9,H*.065),Math.min(15,H*.1)][d.lc]*Math.min(1,lv/30),fc=mix(col,'#fffaf0',.5),g=rng(hash(d.cup)+9);inn+=`<path d="${men(liq)} V${liq+fh} Q60 ${liq+fh+3} 100 ${liq+fh+1} T202 ${liq+fh} H-2 Z" fill="${fc}" opacity=".93"/>`;for(let i=0;i<Math.round(fh*4);i++){const y=liq+.5+g()*fh,[a,b]=C.x(Math.min(B-2,y+2)),x=a+3+g()*Math.max(0,b-a-6);inn+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(.4+g()*.8).toFixed(1)}" fill="#fff" opacity="${(.4+g()*.5).toFixed(2)}"/>`}}
+
+  if(d.wk&&!hasCap&&!slush){const fine=d.wk>=3,fh=[0,Math.min(4,H*.035),Math.min(8,H*.06),Math.min(13,H*.09)][d.wk]*Math.min(1,lv/30),fc=mix(col,'#f4f8e2',fine?.64:.5),g=rng(hash(d.cup)+21);inn+=`<path d="${men(liq)} V${liq+fh} Q60 ${liq+fh+2.5} 100 ${liq+fh+1} T202 ${liq+fh} H-2 Z" fill="${fc}" opacity=".95"/>`;for(let i=0;i<Math.round(fh*(fine?7:4));i++){const y=liq+.5+g()*fh,[a,b]=C.x(Math.min(B-2,y+2)),x=a+3+g()*Math.max(0,b-a-6);inn+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${((fine?.3:.5)+g()*(fine?.45:.9)).toFixed(1)}" fill="#fcfef2" opacity="${(.4+g()*.5).toFixed(2)}"/>`}}
   if(d.shk&&!hasCap&&!slush){const fh=[0,Math.min(8,H*.055),Math.min(13,H*.09),Math.min(30,H*.2)][d.shk]*Math.min(1,lv/30),fc=mix(col,'#ffffff',d.shk>2?.68:.6),g=rng(hash(d.cup)+5);inn+=`<path d="${men(liq)} V${liq+fh} Q60 ${liq+fh+4} 100 ${liq+fh+1} T202 ${liq+fh} V${liq+fh+3} H-2 Z" fill="${mix(fc,col,.5)}" opacity=".7"/><path d="${men(liq)} V${liq+fh} Q60 ${liq+fh+4} 100 ${liq+fh+1} T202 ${liq+fh} H-2 Z" fill="${fc}" opacity=".95"/>`;for(let i=0;i<Math.round(fh*3);i++){const y=liq+1+g()*fh,[a,b]=C.x(Math.min(B-2,y+2)),x=a+3+g()*Math.max(0,b-a-6);inn+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(.6+g()*1.3).toFixed(1)}" fill="none" stroke="#fff" stroke-width=".6" opacity="${(.5+g()*.5).toFixed(2)}"/>`}}
   if(tq('奥利奥碎'))P('奥利奥碎',10*tq('奥利奥碎'),zt,4).forEach(([x,y],i)=>inn+=`<path d="M${x-3} ${y} l3 -3 l3 2 l-1 3z" fill="#2b2522" transform="rotate(${i*47%360} ${x} ${y})"/>`);
   if(!hasCap&&!slush)inn+=`<path d="${men(liq)}" fill="none" stroke="#fff" stroke-width="1.2" opacity=".6"/>`;
@@ -1703,7 +1716,7 @@ function cupSVG(d,lv,h){
   front+=`<path d="${C.d}" style="fill:var(--paper)" class="lf"/><path d="M${l+8} ${T+14} Q${l+6} ${T+50} ${l+14} ${B-14}" fill="none" stroke="#000" stroke-opacity=".05" stroke-width="6" stroke-linecap="round"/>`;
   if(lv>0){const rx=(r-l)/2-4,ey=T+2,top=(()=>{const PL=pourLayers({...d,col});return PL?mix(PL.L[PL.L.length-1][0],col,PL.f):col})();front+=`<ellipse cx="${cx}" cy="${ey}" rx="${rx}" ry="8" fill="${top}"/><ellipse cx="${cx}" cy="${ey}" rx="${rx}" ry="8" fill="none" stroke="#000" stroke-opacity=".08" stroke-width="2"/>`;
    if(hasCap){front+=`<ellipse cx="${cx}" cy="${ey}" rx="${rx-6}" ry="5.5" fill="${capCol(d)}"/>`+`<path d="M${cx} ${ey+4} C${cx-12} ${ey-1} ${cx-8} ${ey-6} ${cx} ${ey-2.5} C${cx+8} ${ey-6} ${cx+12} ${ey-1} ${cx} ${ey+4}Z" fill="${top}" opacity=".85"/>`;if(d.cap==='奶泡'&&d.fm===1){const g=rng(13);for(let i=0;i<16;i++)front+=`<circle cx="${(cx-rx+14+g()*(2*rx-28)).toFixed(1)}" cy="${(ey-3+g()*6).toFixed(1)}" r="${(.6+g()*.9).toFixed(1)}" fill="#b9875a" opacity=".5"/>`}if(d.cap==='奶泡'&&d.fm===3){const g=rng(13);for(let i=0;i<10;i++){const x=cx-rx+12+g()*(2*rx-24),y=ey-3+g()*6,rr=1.6+g()*2.6;front+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${rr.toFixed(1)}" fill="#fffaf0" fill-opacity=".5" stroke="#c9b48a" stroke-width=".5"/>`}}}
-   else if(d.lc){const fc=mix(top,'#fffaf0',.5),g=rng(9);front+=`<ellipse cx="${cx}" cy="${ey}" rx="${rx-3-(3-d.lc)*5}" ry="${(4+d.lc*.8).toFixed(1)}" fill="${fc}"/>`;for(let i=0;i<8*d.lc;i++){const x=cx-rx+16+g()*(2*rx-32),y=ey-3+g()*6;front+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(.4+g()*.7).toFixed(1)}" fill="#fff" opacity=".7"/>`}}}
+   else if(d.lc){const fc=mix(top,'#fffaf0',.5),g=rng(9);front+=`<ellipse cx="${cx}" cy="${ey}" rx="${rx-3-(3-d.lc)*5}" ry="${(4+d.lc*.8).toFixed(1)}" fill="${fc}"/>`;for(let i=0;i<8*d.lc;i++){const x=cx-rx+16+g()*(2*rx-32),y=ey-3+g()*6;front+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(.4+g()*.7).toFixed(1)}" fill="#fff" opacity=".7"/>`}}else if(d.wk){front+=`<ellipse cx="${cx}" cy="${ey}" rx="${rx-3-(3-d.wk)*5}" ry="${(4+d.wk*.8).toFixed(1)}" fill="${mix(top,'#f4f8e2',.58)}"/>`}}
   front+=`<path d="M${l} ${T-2} L${r} ${T-2}" class="ln"/>`;
  }else front+=`<path d="${C.d}" class="ln"/>`;
  if(d.cap==='烤棉花糖'&&lv>=60){const t=Math.min(1,d.tc||0),mc=mix('#fffaf2','#e9c08e',t*.7),tc2=mix('#efe2cf','#9a5a26',t),n=Math.max(2,Math.min(5,Math.floor((r-l)/26)));for(let i=0;i<n;i++){const x=l+(i+.5)*(r-l)/n-9+(i%2?3:-2),y=T-14+(i%2?3:0);front+=`<g transform="rotate(${[-8,6,-4,10,-6][i]} ${x+9} ${y+7})"><rect x="${x.toFixed(1)}" y="${y}" width="18" height="15" rx="5" fill="${mc}" stroke="#ddcfb8" stroke-width=".8"/><rect x="${x.toFixed(1)}" y="${y}" width="18" height="6" rx="3" fill="${tc2}" opacity="${(.15+t*.85).toFixed(2)}"/></g>`}}
@@ -1879,7 +1892,7 @@ function serve(){
  if(cur==='bar'&&!barOpen())return;
  if(washDue()){openWash();return}
  const s=ST[cur],R=BARS[cur].R;store.made=(store.made||0)+1;if(cur==='bar'){const dd=BARS.bar.look(s);if(dd.pour&&dd.pour.length>=7&&(mStir.bar||0)>=4.6)s.mixd=1;else delete s.mixd}
- const hits=R.filter(r=>r.ok(s)),pri=r=>(s.lc&&LCH_R.has(r.id))||(s.fm&&FM_R.has(r.id))||(s.sm&&SM_R.has(r.id))||(s.fi&&FI_R.has(r.id))||(s.sk&&SK_R.has(r.id))||(s.tc&&TC_R.has(r.id))||(s.pd&&PD_R.has(r.id))||(s.la&&LA_R.has(r.id)),fresh=hits.find(r=>pri(r)&&!store.items[r.id])||hits.find(r=>!store.items[r.id]);let note;
+ const hits=R.filter(r=>r.ok(s)),pri=r=>(s.lc&&LCH_R.has(r.id))||(s.fm&&FM_R.has(r.id))||(s.sm&&SM_R.has(r.id))||(s.fi&&FI_R.has(r.id))||(s.sk&&SK_R.has(r.id))||(s.tc&&TC_R.has(r.id))||(s.pd&&PD_R.has(r.id))||(s.la&&LA_R.has(r.id))||(s.wk&&WK_R.has(r.id)),fresh=hits.find(r=>pri(r)&&!store.items[r.id])||hits.find(r=>!store.items[r.id]);let note;
  if(fresh){store.items[fresh.id]=clone(s);note={rk:rkey(fresh),k:fresh.hidden?'隐藏款解锁':'新配方解锁',n:fresh.name,d:fresh.desc,c:`收进${BARS[cur].label}图鉴 · ${cntOf(cur)} / ${R.length}`}}
  else if(hits.length)note={rk:rkey(hits[0]),k:'图鉴里已经有了',n:hits[0].name,d:'这杯已经收过啦，换个搭配，试试还没解锁的那些。'};
  else note={k:'原创配方',n:BARS[cur].look(s).name,d:'这杯还不在图鉴里，是你自己的独家配方。'};
@@ -1929,7 +1942,7 @@ function blowDrink(){if(!dctx||!dctx.st||dctx.st.fi!==1||dctx.lv<=0||dctx.pourin
 document.getElementById('d-sip').onclick=()=>{if(blowDrink())return;if(dctx.lv<=0){if(dctx.from==='book'){dctx.lv=100;if(dctx.duo)dctx.duo.lv=100;drawDrink();balBuild()}else show('make');return}if(dctx.anim)return;SND.fx('sip');const before=dctx.lv,after=Math.max(0,Math.round(before)-20);animLv(after,380);balRelease(after<=0);
  if(dctx.duo){const D=dctx.duo,from=D.lv??100,to=before>0?from*after/before:0;setTimeout(()=>{if(dctx.duo!==D)return;const t0=performance.now(),dur=matchMedia('(prefers-reduced-motion: reduce)').matches?1:420;SND.fx('sip');const step=now=>{if(dctx.duo!==D)return;const k=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-k,3);D.lv=from+(to-from)*e;drawDrink();if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step)},520)}};
 function animLv(to,dur){const from=dctx.lv,t0=performance.now();if(matchMedia('(prefers-reduced-motion: reduce)').matches)dur=1;dctx.anim=true;const step=now=>{const k=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-k,3);dctx.lv=from+(to-from)*e;drawDrink();if(k<1)requestAnimationFrame(step);else{dctx.lv=to;dctx.anim=false;dctx.pouring=false;drawDrink()}};requestAnimationFrame(step)}
-document.getElementById('d-alt').onclick=()=>{if(dctx.from==='book'){ST[dctx.bk]=clone(dctx.st);delete ST[dctx.bk].pd;delete ST[dctx.bk].la;['lc','fm','sm','smT','fi','fiT','foT'].forEach(k=>delete ST[dctx.bk][k]);cur=dctx.bk}show('make')};
+document.getElementById('d-alt').onclick=()=>{if(dctx.from==='book'){ST[dctx.bk]=clone(dctx.st);delete ST[dctx.bk].pd;delete ST[dctx.bk].la;['lc','fm','sm','smT','fi','fiT','foT','wk'].forEach(k=>delete ST[dctx.bk][k]);cur=dctx.bk}show('make')};
 document.getElementById('d-back').onclick=()=>show('book');
 
 
@@ -1955,16 +1968,16 @@ function handLook(bk,s,L){const pd=s.pd;if(!pd)return L;const ks=Object.keys(pd)
   L.fruits=fr;L.col=mix(L.col,'#f1ead2',.04*mx);if(!/^(手打|棒打)/.test(L.name))L.name=(ks.includes('橙子')&&!ks.includes('柠檬')?'棒打':'手打')+L.name}
  else if(bk==='bar'){ks.forEach(k=>{if(FR[k]){const F0=FR[k];if(L.fruits&&L.fruits[k]){L.fruits={...L.fruits};delete L.fruits[k]}mash.push({k,c:F0.c,s:F0.s||mix(F0.c,'#000000',.2),in:mix(F0.c,'#ffffff',.55),n:1,lv:pd[k][0],kind:F0.herb?'leaf':'squash'});L.col=mix(L.col,F0.t,Math.min(.3,.07*pd[k][0]));return}const leaf=k==='薄荷叶';mash.push({k,c:leaf?'#6fae6a':'#8cc152',s:leaf?'#4f8f4a':'#5f8f2c',in:leaf?'#9fd09a':'#d4ea9f',n:1,lv:pd[k][0],kind:leaf?'leaf':'wedge'});if(leaf)L.garn=(L.garn||[]).filter(g=>g!=='薄荷叶');else L.rimG=(L.rimG||[]).filter(g=>g!=='青柠角')});if(!/^手捣/.test(L.name))L.name='手捣'+L.name}
  L.mash=mash;return L}
-function handRows(bk,s){const p=[];const pd=s.pd||{};Object.keys(pd).forEach(k=>{if(pd[k][0]>0)p.push(bk==='bar'?'手捣'+k:(k==='橙子'?'棒打':'手打')+k)});if(s.rim)p.push(RIM_T[s.rim]);if(s.sk)p.push('摇匀');if(s.tc>0)p.push(bk==='bar'?'点火橙皮':s.cap==='焦糖布蕾'?(s.cr?'烧焦糖 敲开':'烧焦糖'):s.cap==='爆米花'?(s.tc>=2.3?'爆米花烧糊了':s.tc>=1.6?'爆米花烧到焦糖色':s.tc>=1?'爆米花开花':'爆了一半'):'烤棉花糖');if(s.la)p.push('拉花');if(s.lc)p.push(['','拉茶','拉茶 拉出泡沫','拉茶 拉得高高的'][lcLv(s.lc)]);if(s.fm&&s.cap==='奶泡')p.push(['','打奶泡 薄薄一层','打奶泡 绵密','奶泡打过头'][fmQ(s.fm)]);if(s.sm)p.push(s.sm>=1.5?'烟熏 熏太久啦':'烟熏');if(s.fi)p.push(s.fi===1?'点火 还烧着':'点火 吹灭');return p.length?[['手作',p.join('  ')]]:[]}
+function handRows(bk,s){const p=[];const pd=s.pd||{};Object.keys(pd).forEach(k=>{if(pd[k][0]>0)p.push(bk==='bar'?'手捣'+k:(k==='橙子'?'棒打':'手打')+k)});if(s.rim)p.push(RIM_T[s.rim]);if(s.sk)p.push('摇匀');if(s.tc>0)p.push(bk==='bar'?'点火橙皮':s.cap==='焦糖布蕾'?(s.cr?'烧焦糖 敲开':'烧焦糖'):s.cap==='爆米花'?(s.tc>=2.3?'爆米花烧糊了':s.tc>=1.6?'爆米花烧到焦糖色':s.tc>=1?'爆米花开花':'爆了一半'):'烤棉花糖');newRows(s,p);if(s.la)p.push('拉花');if(s.lc)p.push(['','拉茶','拉茶 拉出泡沫','拉茶 拉得高高的'][lcLv(s.lc)]);if(s.fm&&s.cap==='奶泡')p.push(['','打奶泡 薄薄一层','打奶泡 绵密','奶泡打过头'][fmQ(s.fm)]);if(s.sm)p.push(s.sm>=1.5?'烟熏 熏太久啦':'烟熏');if(s.fi)p.push(s.fi===1?'点火 还烧着':'点火 吹灭');return p.length?[['手作',p.join('  ')]]:[]}
 const artOK=s=>s.ice==='热'&&s.milk!=='不加奶'&&(s.cof==='浓缩'||s.cof==='双份浓缩')&&!['奶油顶','雪顶','焦糖布蕾','烤棉花糖','爆米花'].includes(s.cap);
 let mArt=null;const pdHits={tea:0,bar:0},PST={x:null,busy:false};
-function handSync(){const s=ST[cur];if(!s)return;if(RIM.on&&RIM.bk!==cur)RIM.cancel(true);if(TOR.on&&(TOR.bk!==cur||!tcOK(cur,s)))TOR.stop(true);if(s.tc&&!tcOK(cur,s)){delete s.tc;delete s.cr}if(SHK.on&&(SHK.bk!==cur||skKeyOf(s)!==SHK.key))SHK.cancel(true);if(cur!=='coffee'&&s.sk&&(skKeyOf(s)!==skKey[cur]||!skOK(cur,s))){delete s.sk;skKey[cur]=null}if(cur!=='coffee')pdSync(cur,s);if(cur!=='coffee'&&!s.pd)pdHits[cur]=0;
+function handSync(){const s=ST[cur];if(!s)return;newSync(s);if(RIM.on&&RIM.bk!==cur)RIM.cancel(true);if(TOR.on&&(TOR.bk!==cur||!tcOK(cur,s)))TOR.stop(true);if(s.tc&&!tcOK(cur,s)){delete s.tc;delete s.cr}if(SHK.on&&(SHK.bk!==cur||skKeyOf(s)!==SHK.key))SHK.cancel(true);if(cur!=='coffee'&&s.sk&&(skKeyOf(s)!==skKey[cur]||!skOK(cur,s))){delete s.sk;skKey[cur]=null}if(cur!=='coffee')pdSync(cur,s);if(cur!=='coffee'&&!s.pd)pdHits[cur]=0;
  if(cur==='coffee'&&s.la&&(!artOK(s)||!mArt)){delete s.la;mArt=null}
  if(PUL.on&&(PUL.bk!==cur||!lcOK(s)))PUL.cancel(true);if(cur==='tea'&&s.lc&&!lcOK(s))delete s.lc;
  if(FRO.on&&(FRO.bk!==cur||!frOK(s)))FRO.cancel(true);if(cur==='coffee'&&s.fm&&!frOK(s))delete s.fm;
  if(SMK.on&&(SMK.bk!==cur||!smOK(s)))SMK.cancel(true);if(cur==='bar'&&s.sm&&!smOK(s)){delete s.sm;delete s.smT}
  if(FIR.on&&(FIR.bk!==cur||!fiOK(s)))FIR.cancel(true);if(cur==='bar'&&s.fi&&!fiOK(s)){delete s.fi;delete s.fiT;delete s.foT}}
-function handServed(s){[PUL,FRO,SMK,FIR].forEach(A=>{if(A.on)A.cancel(true)});['lc','fm','sm','smT','fi','fiT','foT'].forEach(k=>delete s[k]);if(TOR.on)TOR.stop(true);if(RIM.on)RIM.cancel(true);if(cur==='bar'){delete s.rim;delete s.fpT;delete s.mixd}delete s.tc;delete s.cr;if(SHK.on)SHK.cancel(true);delete s.sk;if(cur!=='coffee')skKey[cur]=null;if(cur==='coffee'&&s.la&&mArt&&dctx){dctx.art=mArt;resetRcpt();artIntro()}delete s.pd;delete s.la;mArt=null;if(cur!=='coffee')pdHits[cur]=0}
+function handServed(s){[PUL,FRO,SMK,FIR,WSK].forEach(A=>{if(A.on)A.cancel(true)});['lc','fm','sm','smT','fi','fiT','foT','wk'].forEach(k=>delete s[k]);if(TOR.on)TOR.stop(true);if(RIM.on)RIM.cancel(true);if(cur==='bar'){delete s.rim;delete s.fpT;delete s.mixd}delete s.tc;delete s.cr;if(SHK.on)SHK.cancel(true);delete s.sk;if(cur!=='coffee')skKey[cur]=null;if(cur==='coffee'&&s.la&&mArt&&dctx){dctx.art=mArt;resetRcpt();artIntro()}delete s.pd;delete s.la;mArt=null;if(cur!=='coffee')pdHits[cur]=0}
 function pestGeo(cup,x,k){const C=CUPS[cup]||CUPS['直身杯'],cx=(C.rim[0]+C.rim[1])/2,PV=[cx+50,C.T-86],ty=C.B-28,dx=x-PV[0],dy=ty-PV[1],D=Math.hypot(dx,dy),ang=-Math.atan2(dx,dy)*180/Math.PI,sh=D-190-40+40*k;return{o:`translate(${PV[0]} ${PV[1]}) rotate(${ang.toFixed(2)})`,i:`translate(0 ${sh.toFixed(1)})`}}
 function pestX(cup,x){const C=CUPS[cup]||CUPS['直身杯'],[a,b]=C.x(C.B-28);return Math.max(a+14,Math.min(b-14,x))}
 function pestSVG(cup,h,stars){const C=CUPS[cup]||CUPS['直身杯'],cx=(C.rim[0]+C.rim[1])/2;if(PST.x==null)PST.x=cx;const G=pestGeo(cup,pestX(cup,PST.x),0),id='pc'+(clipN++);
@@ -1974,13 +1987,13 @@ function setPest(cup,x,k){const G=pestGeo(cup,x,k),a=document.getElementById('m-
 function handDecor(h){const box=document.getElementById('m-cup'),hint=document.getElementById('m-hand'),s=ST[cur];if(!box||!hint)return;hint.innerHTML='';
  if(cur==='bar'&&!barOpen())return;
  if(TOR.on){TOR.mount(box,h);return}
- for(const A of [PUL,FRO,SMK,FIR])if(A.on){A.mount(box,h);return}
+ for(const A of [PUL,FRO,SMK,FIR,WSK])if(A.on){A.mount(box,h);return}
  if(cur!=='coffee'){if(RIM.on){RIM.mount();return}if(SHK.on){SHK.mount(box,h);return}
   if(s.sk){hint.innerHTML=`<span>摇匀了 · 甩了 ${s.sk} 下</span>`+(cur==='bar'?smHint(s):'');return}
   const ks=pdKeys(cur,s);let t='';
   if(ks.length){const lv=ks.map(k=>pdLv(s,k)),done=lv.every(v=>v>=3);box.insertAdjacentHTML('beforeend',pestSVG(BARS[cur].look(s).cup,h,done));
    const w=cur==='bar'?'捣':'捶';t=done?`香味${w}出来啦 · ${w}了 ${pdHits[cur]} 下`:pdHits[cur]?`${w}了 ${pdHits[cur]} 下 · 继续${w}`:`点杯子可以${w}一${w}`}
-  hint.innerHTML=(t?`<span>${t}</span>`:'')+(skOK(cur,s)&&!s.lc?'<button class="btn" type="button" data-shk="1">摇一摇</button>':'')+(cur==='tea'?pulHint(s):'')+torchHint(cur,s)+(cur==='bar'?fiHint(s)+smHint(s)+rimHint(s):'');return}
+  hint.innerHTML=(t?`<span>${t}</span>`:'')+(skOK(cur,s)&&!s.lc&&!s.wk?'<button class="btn" type="button" data-shk="1">摇一摇</button>':'')+(cur==='tea'?pulHint(s)+wkHint(s):'')+torchHint(cur,s)+(cur==='bar'?fiHint(s)+smHint(s)+rimHint(s):'');return}
  if(artOK(s)){if(s.la&&mArt)hint.innerHTML=`${artSVG(mArt,34)}<span>拉好了</span><button class="btn" type="button" data-art="1">重新拉</button>`;else hint.innerHTML='<button class="btn" type="button" data-art="1">拉个花</button>'}hint.insertAdjacentHTML('beforeend',froHint(s)+torchHint(cur,s))}
 document.getElementById('m-hand').addEventListener('click',e=>{const q=a=>e.target.closest('['+a+']');if(q('data-pul'))return PUL.start();if(q('data-pulx'))return PUL.cancel();if(q('data-fro'))return FRO.start();if(q('data-frop'))return FRO.pour();if(q('data-frox'))return FRO.cancel();if(q('data-smk'))return SMK.start();if(q('data-smkx'))return SMK.cancel();if(q('data-fir'))return FIR.start();if(q('data-firx'))return FIR.cancel();if(e.target.closest('[data-art]'))ART.open();else if(e.target.closest('[data-shk]'))SHK.start();else if(e.target.closest('[data-shkx]'))SHK.cancel();else if(e.target.closest('[data-tor]'))TOR.start();else if(e.target.closest('[data-torx]'))TOR.stop();else if(e.target.closest('[data-rimt]'))RIM.pick(e.target.closest('[data-rimt]').dataset.rimt);else if(e.target.closest('[data-rimx]'))RIM.cancel();else if(e.target.closest('[data-rim]'))RIM.start()});
 function pound(x){if(PST.busy)return;const s=ST[cur],cup=BARS[cur].look(s).cup;x=pestX(cup,x);PST.busy=true;const x0=pestX(cup,PST.x??x),t0=performance.now();
@@ -1995,8 +2008,8 @@ function pound(x){if(PST.busy)return;const s=ST[cur],cup=BARS[cur].look(s).cup;x
 const SK_R=new Set(['b_imperial','b_coffeesour','gingerbroke','b_strawdaiq','fullhand','paomo','paomog','shakemt','b_snow','b_wlady','b_plady','b_daiq','tigerrun','spray','slowshake','paomosj','shakegreen','shakeoolong','passiongreen','lemongreen','shakefruit','shakemilk','b_spray']);
 const PD_R=new Set(['b_julep','b_berryberry','tanghulu','hawhand','kiwismash','fullhand','handlemon','handorange','handyougan','handhuangpi','b_handmojito','purple','mashberry','mashgrape','mashgreengrape','mashmelon','mashguava','mashblue','mashstar','b_berrymojito','b_grapehiball']),LA_R=new Set(['c_art']),TC_R=new Set(['b_oldfire','cinema','burntpop','caramelpop','butterpop','popcornmt','c_popcorn','matchabrulee','chestbrulee','bday','hojibrulee','brulee','smores','c_camp','c_brulee','c_smores']);
 const LCH_R=new Set(['lacha','tarik','yylacha','lahigh']),FM_R=new Set(['c_velvet','c_silkflat','c_overfoam']),SM_R=new Set(['b_smokeold','b_smokenegroni','b_fog']),FI_R=new Set(['b_flameb52','b_flamecog','b_stillburn']);
-function hico(id,pen){let o='';if(pen)o+='<span class="pen">'+PEN+'</span>';if(LCH_R.has(id))o+='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 1.5h7l-.6 5H6.6Z" fill="#c3c7cc" stroke="#8d929a" stroke-width=".7"/><path d="M6.4 6.5 C6 9 6.2 11 6.3 14" fill="none" stroke="#c98a5a" stroke-width="1.6" stroke-linecap="round"/></svg>';if(FM_R.has(id))o+='<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="5.5" cy="9.5" r="3.6" fill="#fbf6ea" stroke="#b9a37a" stroke-width=".8"/><circle cx="10.5" cy="8" r="2.8" fill="#fbf6ea" stroke="#b9a37a" stroke-width=".8"/><circle cx="9.6" cy="12.6" r="2" fill="#fbf6ea" stroke="#b9a37a" stroke-width=".8"/></svg>';if(SM_R.has(id))o+='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 14c-3-3 3-5 0-8s2-4 1-5" fill="none" stroke="#9b968d" stroke-width="1.6" stroke-linecap="round"/><path d="M10.5 14c-2.2-2.4 2.2-4 0-6.4" fill="none" stroke="#b5b1a9" stroke-width="1.4" stroke-linecap="round"/></svg>';if(FI_R.has(id))o+='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5C9.5 4.5 13 6.5 13 10a5 5 0 0 1-10 0c0-2 1-3.2 2-4 0 1.5.8 2.4 1.6 2.6C6.4 6.4 7 4 8 1.5Z" fill="#4f8ef0"/><path d="M8 8.5c1 1.2 2 2 2 3.2a2 2 0 0 1-4 0c0-1 .9-2 2-3.2Z" fill="#bcdcff"/></svg>';if(PD_R.has(id))o+='<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="6.2" y="1" width="3.6" height="14" rx="1.8" transform="rotate(28 8 8)" fill="#a8774a"/></svg>';if(SK_R.has(id))o+='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 1.5h6l1.6 12.5H3.4Z" fill="#c3c7cc" stroke="#8d929a" stroke-width=".8"/><path d="M3.6 12.2h8.8" stroke="#8d929a" stroke-width=".9"/></svg>';if(TC_R.has(id))o+='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5C9.5 4.5 13 6.5 13 10a5 5 0 0 1-10 0c0-2 1-3.2 2-4 0 1.5.8 2.4 1.6 2.6C6.4 6.4 7 4 8 1.5Z" fill="#ec8a3a"/><path d="M8 8.5c1 1.2 2 2 2 3.2a2 2 0 0 1-4 0c0-1 .9-2 2-3.2Z" fill="#f6c24a"/></svg>';if(LA_R.has(id))o+='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 13.5C3 10 1.5 7.5 2.6 5.2 3.6 3.2 6.4 3 8 5.3 9.6 3 12.4 3.2 13.4 5.2 14.5 7.5 13 10 8 13.5Z" fill="#d9a07a"/></svg>';return o?`<span class="hico">${o}</span>`:''}
-const SHK_CUPS=['直身杯','胖胖杯','方杯','海波杯','古典杯'];
+function hico(id,pen){let o='';o+=hico2(id);if(pen)o+='<span class="pen">'+PEN+'</span>';if(LCH_R.has(id))o+='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 1.5h7l-.6 5H6.6Z" fill="#c3c7cc" stroke="#8d929a" stroke-width=".7"/><path d="M6.4 6.5 C6 9 6.2 11 6.3 14" fill="none" stroke="#c98a5a" stroke-width="1.6" stroke-linecap="round"/></svg>';if(FM_R.has(id))o+='<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="5.5" cy="9.5" r="3.6" fill="#fbf6ea" stroke="#b9a37a" stroke-width=".8"/><circle cx="10.5" cy="8" r="2.8" fill="#fbf6ea" stroke="#b9a37a" stroke-width=".8"/><circle cx="9.6" cy="12.6" r="2" fill="#fbf6ea" stroke="#b9a37a" stroke-width=".8"/></svg>';if(SM_R.has(id))o+='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 14c-3-3 3-5 0-8s2-4 1-5" fill="none" stroke="#9b968d" stroke-width="1.6" stroke-linecap="round"/><path d="M10.5 14c-2.2-2.4 2.2-4 0-6.4" fill="none" stroke="#b5b1a9" stroke-width="1.4" stroke-linecap="round"/></svg>';if(FI_R.has(id))o+='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5C9.5 4.5 13 6.5 13 10a5 5 0 0 1-10 0c0-2 1-3.2 2-4 0 1.5.8 2.4 1.6 2.6C6.4 6.4 7 4 8 1.5Z" fill="#4f8ef0"/><path d="M8 8.5c1 1.2 2 2 2 3.2a2 2 0 0 1-4 0c0-1 .9-2 2-3.2Z" fill="#bcdcff"/></svg>';if(PD_R.has(id))o+='<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="6.2" y="1" width="3.6" height="14" rx="1.8" transform="rotate(28 8 8)" fill="#a8774a"/></svg>';if(SK_R.has(id))o+='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 1.5h6l1.6 12.5H3.4Z" fill="#c3c7cc" stroke="#8d929a" stroke-width=".8"/><path d="M3.6 12.2h8.8" stroke="#8d929a" stroke-width=".9"/></svg>';if(TC_R.has(id))o+='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5C9.5 4.5 13 6.5 13 10a5 5 0 0 1-10 0c0-2 1-3.2 2-4 0 1.5.8 2.4 1.6 2.6C6.4 6.4 7 4 8 1.5Z" fill="#ec8a3a"/><path d="M8 8.5c1 1.2 2 2 2 3.2a2 2 0 0 1-4 0c0-1 .9-2 2-3.2Z" fill="#f6c24a"/></svg>';if(LA_R.has(id))o+='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 13.5C3 10 1.5 7.5 2.6 5.2 3.6 3.2 6.4 3 8 5.3 9.6 3 12.4 3.2 13.4 5.2 14.5 7.5 13 10 8 13.5Z" fill="#d9a07a"/></svg>';return o?`<span class="hico">${o}</span>`:''}
+const SHK_CUPS=['直身杯','胖胖杯','方杯','海波杯','古典杯','竖纹杯'];
 const TC_CAPS=['焦糖布蕾','烤棉花糖','爆米花'],tcMax=s=>s.cap==='爆米花'?2.4:1;const tcOK=(bk,s)=>bk==='bar'?(s.gar||[]).includes('橙皮'):TC_CAPS.includes(s.cap);
 function torchLook(s,L){return s.tc?{...L,tc:s.tc,cr:s.cr,fpT:s.fpT}:L}
 function skOK(bk,s){if(bk==='coffee'||!SHK_CUPS.includes(s.cup)||TC_CAPS.includes(s.cap))return false;if(bk==='tea')return!['热','温','去冰','冰沙'].includes(s.ice);if(bk==='bar')return!['温','去冰'].includes(s.ice)&&(s.sp.length>0||nMX(s)>0||!!FLAV[s.fl]);return false}
@@ -2072,12 +2085,12 @@ const RIM=(()=>{const api={on:false,type:null,p:0,bk:null};let fp=null;const el=
  return api})();
 // ---------- 手作：拉茶 · 打奶泡 · 烟熏 · 火焰 ----------
 const lcLv=c=>!c?0:c>=8?3:c>=4?2:1,fmQ=f=>!f?0:f<1.5?1:f<=3.6?2:3;
-const lcOK=s=>!!(TEAS[s.tea]||{}).c&&M(s)&&s.cap==='不要'&&s.ice!=='冰沙'&&!s.sk;
+const lcOK=s=>!!(TEAS[s.tea]||{}).c&&M(s)&&s.cap==='不要'&&s.ice!=='冰沙'&&!s.sk&&!s.wk;
 const frOK=s=>s.cap==='奶泡'&&CM(s);
 const FI_NO=['牛奶','淡奶油','椰浆','乳酸菌饮料','黑芝麻糊','苏打水','汤力水','姜汁汽水','葡萄气泡水','可乐'];
 const fiOK=s=>s.sp.length>0&&['子弹杯','古典杯'].includes(s.cup)&&['去冰','温'].includes(s.ice)&&s.cap==='不要'&&!FI_NO.some(k=>MX(s,k));
 const smOK=s=>s.sp.length>0;
-const HB=()=>SHK.on||TOR.on||RIM.on||PUL.on||FRO.on||SMK.on||FIR.on;
+const HB=()=>SHK.on||TOR.on||RIM.on||PUL.on||FRO.on||SMK.on||FIR.on||NEWON();
 function pulHint(s){if(!lcOK(s))return'';const k=lcLv(s.lc);return s.lc?`<span>${['','拉了几下','泡沫出来啦','拉得滑滑的'][k]}</span><button class="btn" type="button" data-pul="1">再拉</button>`:'<button class="btn" type="button" data-pul="1">拉茶</button>'}
 function froHint(s){if(!frOK(s))return'';const q=fmQ(s.fm);return q?`<span>${['','奶泡薄薄的','奶泡绵绵密密','奶泡打过头啦'][q]}</span><button class="btn" type="button" data-fro="1">重新打</button>`:'<button class="btn" type="button" data-fro="1">打奶泡</button>'}
 function smHint(s){if(!smOK(s)||s.fi)return'';return s.sm?`<span>${s.sm>=1.5?'熏得好浓':'熏过啦'}</span>`:'<button class="btn" type="button" data-smk="1">烟熏</button>'}
@@ -2183,6 +2196,44 @@ const FIR=(()=>{const api={on:false,bk:null};let firing=false,hold=0,lt=0,loopin
  el.addEventListener('pointerdown',e=>{if(!api.on)return;try{el.setPointerCapture(e.pointerId)}catch(_){}setFire(true)});
  const up=()=>{if(api.on&&firing)setFire(false)};el.addEventListener('pointerup',up);el.addEventListener('pointercancel',up);
  return api})();
+// ===== 2026-11：刷抹茶 =====
+const WK_R=new Set(['whisksnow','whisk','whisklatte']);
+const wkLv=n=>!n?0:n>=12?3:n>=5?2:1;
+const wkOK=s=>s.tea==='抹茶'&&s.ice!=='冰沙'&&!s.sk&&!s.lc;
+function NEWON(){return WSK.on}
+function NEWLV(){return 100}
+function newSync(s){if(WSK.on&&(WSK.bk!==cur||!wkOK(s)))WSK.cancel(true);if(cur==='tea'&&s.wk&&(s.tea!=='抹茶'||s.ice==='冰沙'))delete s.wk}
+function newRows(s,p){if(s.wk)p.push(['','刷抹茶','刷抹茶 起沫','刷抹茶 沫细如雪'][wkLv(s.wk)])}
+function hico2(id){return WK_R.has(id)?'<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.6v5" stroke="#d9c38a" stroke-width="3.2" stroke-linecap="round"/><path d="M8 7 4 14M8 7l-1.6 7.4M8 7l1.6 7.4M8 7l4 7" fill="none" stroke="#b9a468" stroke-width="1" stroke-linecap="round"/></svg>':''}
+function wkHint(s){if(!wkOK(s))return'';const k=wkLv(s.wk);return s.wk?`<span>${['','刷了几下','起沫啦','沫细得像雪'][k]}</span>${k<3?'<button class="btn" type="button" data-wsk="1">再刷</button>':''}`:'<button class="btn" type="button" data-wsk="1">刷抹茶</button>'}
+{const f=BARS.tea.look;BARS.tea.look=s=>{let L=f(s);if(s.wk){const k=wkLv(s.wk);L={...L,stir:5,pour:null,wk:k,teaFx:k>=2?null:L.teaFx,col:mix(L.col,'#eef3d2',.035*k),name:/^(手打|棒打|手摇|手拉|手刷)/.test(L.name)?L.name:'手刷'+L.name}}return L}}
+// 只重画杯子，不动下面的提示和按钮
+function liveCup(){const box=document.getElementById('m-cup'),old=box&&box.querySelector(':scope>svg');if(!old){drawMake();return}const s=ST[cur],d=BARS[cur].look(s),big=matchMedia('(min-width:780px)').matches,t=document.createElement('div');t.innerHTML=cupSVG({...d,stir:mStir[cur]},NEWLV(),big?260:190);const nw=t.firstElementChild;nw.style.transform=old.style.transform;nw.style.transformOrigin=old.style.transformOrigin;old.replaceWith(nw)}
+function cupPt_unused(e){const sv=document.querySelector('#m-cup>svg');if(!sv)return null;const r=sv.getBoundingClientRect();if(!r.width)return null;return[(e.clientX-r.left)/r.width*220-10,(e.clientY-r.top)/r.height*300-44]}
+const boxH=b=>{const cs=b&&b.querySelector(':scope>svg');return(cs&&parseFloat(cs.style.height))||190};
+// 刷抹茶：小竹刷左右快快地刷，刷出细沫
+const WSK=(()=>{const api={on:false,bk:null};let x=100,vx=0,dir=0,trav=0,lastX=null,sc=1,box=null,root=null,fin=false,lastHint='';
+ const el=document.getElementById('m-cup');
+ function geo(){const s=ST.tea,C=CUPS[s.cup]||CUPS['直身杯'],tipY=Math.min(C.B-26,C.T+80),[a,b]=C.x(tipY);return{tipY,a:a+19,b:b-19}}
+ const tf=G=>`translate(${x.toFixed(1)} ${G.tipY}) rotate(${Math.max(-13,Math.min(13,vx*1.1)).toFixed(1)} 0 -60)`;
+ function svg(h){const G=geo();x=Math.max(G.a,Math.min(G.b,x));let t='';
+  for(let i=-2;i<=2;i++)t+=`<path d="M${(i*.9).toFixed(1)} -46 Q${(i*3).toFixed(1)} -30 ${(i*1.8).toFixed(1)} -15" fill="none" stroke="#b39c5e" stroke-width="1" stroke-linecap="round"/>`;
+  for(let i=-5;i<=5;i++){const c=i<0?1:i>0?-1:0;t+=`<path d="M${(i*1.15).toFixed(1)} -46 Q${(i*5.3).toFixed(1)} -25 ${(i*3.5).toFixed(1)} -4 q${(c*-1.2).toFixed(1)} 3.4 ${(c*2.6).toFixed(1)} 2.2" fill="none" stroke="${i%2?'#cdb578':'#e0cd96'}" stroke-width="1.25" stroke-linecap="round"/>`}
+  return hovSVG(h,1,`<g class="wsk" transform="${tf(G)}">${t}<rect x="-7.2" y="-51" width="14.4" height="5.5" rx="1.6" fill="#2b2522"/><rect x="-6.6" y="-93" width="13.2" height="43" rx="3.2" fill="#e6d4a0" stroke="#b9a468" stroke-width=".8"/><path d="M-6.6 -71 H6.6" stroke="#b9a468" stroke-width=".9"/><path d="M-3 -89 V-55" stroke="#fff" stroke-width="2" opacity=".45" stroke-linecap="round"/></g>`)}
+ function paint(){const g=root&&root.querySelector('.wsk');if(g)g.setAttribute('transform',tf(geo()))}
+ function hint(){const s=ST.tea,k=wkLv(s.wk),t=`<span>${fin?'沫细得像雪啦':s.wk?['','结块刷开啦 · 再快一点','起沫啦 · 接着刷会更细','沫细得像雪啦'][k]:'手指在杯子上左右快快地刷'}</span><button class="btn" type="button" data-wskx="1">${s.wk?'好啦':'先不刷了'}</button>`;if(t!==lastHint){lastHint=t;hand(t)}}
+ const draw=()=>{if(api.on){liveCup();paint()}else drawMake()};
+ api.mount=(b,h)=>{box=b;root=hovMount(b,1,svg(h));lastHint='';hint()};
+ api.start=()=>{const s=ST[cur];if(api.on||cur!=='tea'||!wkOK(s)||HB())return;SND.wake&&SND.wake();Object.assign(api,{on:true,bk:cur});const C=CUPS[s.cup]||CUPS['直身杯'];x=(C.rim[0]+C.rim[1])/2;vx=0;dir=0;trav=0;lastX=null;fin=wkLv(s.wk)>=3;drawMake()};
+ api.cancel=silent=>{if(!api.on)return;api.on=false;lastX=null;hovUnmount(box);box=root=null;AG.draw=drawMake;if(!silent)sync()};
+ el.addEventListener('pointerdown',e=>{if(!api.on||fin)return;lastX=e.clientX;dir=0;trav=0;const sv=el.querySelector(':scope>svg'),r=sv&&sv.getBoundingClientRect();sc=r&&r.width?220/r.width:1;SND.stirFeel(BARS.tea.look(ST.tea));try{el.setPointerCapture(e.pointerId)}catch(_){}});
+ el.addEventListener('pointermove',e=>{if(!api.on||lastX==null||fin)return;const dx=(e.clientX-lastX)*sc;lastX=e.clientX;if(!dx)return;const G=geo();x=Math.max(G.a,Math.min(G.b,x+dx));vx=vx*.6+dx*.4;const sg=Math.sign(dx),s=ST.tea;
+  if(sg!==dir){if(dir&&trav>=13){const k0=wkLv(s.wk);s.wk=Math.min(14,(s.wk||0)+1);if(wkLv(s.wk)!==k0)SND.fx2('splash');if(s.wk>=12&&!fin){fin=true;lastX=null;SND.fx2('ding');hint();setTimeout(()=>{if(api.on)api.cancel()},1000)}}dir=sg;trav=0}trav+=Math.abs(dx);
+  SND.stirMove(Math.abs(dx)/22);agBump(Math.abs(dx)/45,draw,dx/40);paint();hint()});
+ const up=()=>{if(!api.on)return;lastX=null;vx=0;paint()};el.addEventListener('pointerup',up);el.addEventListener('pointercancel',up);
+ return api})();
+
+document.getElementById('m-hand').addEventListener('click',e=>{const q=a=>e.target.closest('['+a+']');if(q('data-wskx'))return WSK.cancel();if(q('data-wsk'))return WSK.start()});
 // ---------- 拉花 ----------
 function artSVG(A,h){const id='a'+(clipN++);let g='';((A||{}).g||[]).forEach(G=>{let bk='',fr='';for(let i=0;i<G.b.length;i+=3){const x=G.b[i],y=G.b[i+1],r=G.b[i+2]/10;bk+=`<circle cx="${x}" cy="${y}" r="${(r+2.6).toFixed(1)}"/>`;fr+=`<circle cx="${x}" cy="${y}" r="${r}"/>`}g+=`<g filter="url(#f${id})"><g fill="#b98352">${bk}</g><g fill="${G.t?'#fbf5ea':'#fdf9f1'}">${fr}</g></g>`});
  return `<svg viewBox="26 26 288 288" style="height:${h}px;width:auto" aria-hidden="true"><defs><radialGradient id="g${id}" cx="50%" cy="46%" r="55%"><stop offset="0" stop-color="#9a6238"/><stop offset=".65" stop-color="#7c4523"/><stop offset="1" stop-color="#5a2d15"/></radialGradient><filter id="f${id}" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceGraphic" stdDeviation="4.2"/><feColorMatrix mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -9"/></filter><clipPath id="c${id}"><circle cx="170" cy="170" r="122"/></clipPath></defs><circle cx="170" cy="170" r="140" fill="#fffdf8" stroke="var(--ink)" stroke-width="3"/><circle cx="170" cy="170" r="122" fill="url(#g${id})"/><g clip-path="url(#c${id})">${g}</g></svg>`}
@@ -2810,7 +2861,7 @@ document.querySelector('.top .brand').onclick=()=>show('home');
 show('home');
 
 </script>
-<span hidden data-ver="202611101227">202611101227</span>
-<script>(function(){var V='202611101227';function chk(){try{fetch('milktea.html?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/data-ver="([0-9]+)"/);if(!m||m[1]===V)return;try{if(sessionStorage.getItem('rl')===m[1])return;sessionStorage.setItem('rl',m[1])}catch(e){}location.replace('milktea.html?v='+m[1])}).catch(function(){})}catch(e){}}document.addEventListener('visibilitychange',function(){if(!document.hidden)chk()});setTimeout(chk,1200)})();</script>
+<span hidden data-ver="202611101535">202611101535</span>
+<script>(function(){var V='202611101535';function chk(){try{fetch('milktea.html?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/data-ver="([0-9]+)"/);if(!m||m[1]===V)return;try{if(sessionStorage.getItem('rl')===m[1])return;sessionStorage.setItem('rl',m[1])}catch(e){}location.replace('milktea.html?v='+m[1])}).catch(function(){})}catch(e){}}document.addEventListener('visibilitychange',function(){if(!document.hidden)chk()});setTimeout(chk,1200)})();</script>
 
 </body></html>
